@@ -1,0 +1,6 @@
+/.env
+/views/*.html
+.idea
+/constants.js
+/node_modules
+/sessions

@@ -1,0 +1,31 @@
+extends layout
+
+block content
+    form.form-signup(action="/signup" method="post")
+        h2.form-signin-heading Please sign up
+        label.sr-only(for='email') Email address
+        input#email.form-control(type='email' name='email' placeholder='Email address' required autofocus)
+        label.sr-only(for='password') Password
+        input#password.form-control(type='password' name='password' placeholder='Password' required)
+        label.sr-only(for='confirmPassword') Password
+        input#confirmPassword.form-control(type='password' name='confirmPassword' placeholder='Confirm Password' required)
+        .checkbox
+            label
+                input#tos(type='checkbox' name='tos', required)
+                |  Accept TOS
+        button.btn.btn-lg.btn-primary.btn-block(type='submit') Sign Up
+        script(type='text/javascript').
+            window.onload = function () {
+                document.getElementById("password").onchange = validatePassword;
+                document.getElementById("confirmPassword").onchange = validatePassword;
+            };
+            function validatePassword() {
+                var pass1 = document.getElementById("password").value;
+                var pass2 = document.getElementById("confirmPassword").value;
+                if (pass1 === null || pass1 === "" || pass1.length < 4)
+                    document.getElementById("password").setCustomValidity("Password must contain at least four characters");
+                else if (pass1 != pass2)
+                    document.getElementById("confirmPassword").setCustomValidity("Passwords Don't Match");
+                else
+                    document.getElementById("confirmPassword").setCustomValidity('');
+            }

@@ -1,0 +1,17 @@
+extends layout
+
+block content
+    h1= title
+    if sets.length > 0
+        table.table
+            thead
+                tr
+                    th Name
+            tbody
+                each set in sets
+                    tr
+                        td #{set.name}
+    else
+        p No sets have been added yet
+
+    a#add.btn.btn-primary(href="../admin/setimport") Import Sets

@@ -1,0 +1,35 @@
+extends layout
+
+block content
+    h1= title
+    if userProducts.length > 0
+        table.table
+            thead
+                tr
+                    th Product
+                    th Description
+                    th Tried it
+                    th Results
+                    th
+            tbody
+                each userProduct in userProducts
+                    tr(class=userProduct.good===true?'success':userProduct.good===false?'danger':'')
+                        td #{userProduct.Product.name}
+                        td #{userProduct.Product.description}
+                        td
+                            if userProduct.used === true
+                                .glyphicon.glyphicon-ok
+                            else
+                                .glyphicon.glyphicon-remove
+                        td
+                            if userProduct.good === true
+                                .glyphicon.glyphicon-thumbs-up
+                            else if userProduct.good === false
+                                .glyphicon.glyphicon-thumbs-down
+                        td
+                            a.btn.btn-primary(href="../user/product/#{userProduct.userproductid}")
+                                .glyphicon.glyphicon-edit
+    else
+        p Looks like you haven't added any products yet.
+
+    a#add.btn.btn-primary(href="../user/product") Add Product

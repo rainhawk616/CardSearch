@@ -1,0 +1,84 @@
+extends layout
+
+block content
+    h1 New Product
+    p Add new product information
+    form(action="/user/product" method="post")
+        .form-group
+            label(for="brand") Brand
+            div
+                select#brand.form-control(name="brand" required)
+                    option
+                    for brand in brands
+                        option(value='#{brand.brandid}') #{brand.name}
+                    option Other
+                input#newbrand.form-control.hidden.group-right(name="newBrand" placeholder="New Brand" required disabled)
+        .form-group
+            label(for="name") Name
+            input#name.form-control(type="text" name="name" placeholder="Name" required)
+        .form-group
+            label(for="description") Description
+            textarea#description.form-control(rows=3 name="description" placeholder="Description")
+        .form-group
+            label Ingredients
+            textarea#ingredients.form-control(name="ingredients" rows=3 placeholder="Paste your comma separated list of ingredients here." required)
+        .form-group
+            label Have you tried it?
+            input#used.checkbox(type="checkbox" name="used")
+        #usedOptions.hidden
+            .form-group
+                label Did this product work well for you?
+                select#good.form-control(name="good" required)
+                    option(value='null') Not sure
+                    option(value='true') Yes
+                    option(value='false') No
+            .form-group
+                label(for="result") Results of using this product
+                div#result-group
+                    select#result.form-control(name="result")
+                        option
+                        for result in results
+                            option(value='#{result.resultid}') #{result.description}
+                        option Other
+                    input#newResult.form-control.hidden.group-right(name="newResult" placeholder="New Result" required disabled)
+                button#addResult.btn.btn-success(type="button")
+                    .glyphicon.glyphicon-plus
+        .form-group.btn-toolbar
+            button.btn.btn-primary(type="submit") Save
+            a.btn.btn-default(href="../user/products") Cancel
+        script(type='text/javascript').
+            $(document).ready(function () {
+                $('#addResult').click(function () {
+                    var group = $('#result-group');
+                    var clone = group.clone().removeAttr("id");
+                    clone.find('select.form-control').removeClass('group-left').change(changeSelectGroup);
+                    clone.find('input.form-control').addClass('hidden').prop('disabled', true);
+                    clone.find("*").removeAttr("id");
+                    group.after(clone);
+                });
+
+                function changeSelectGroup() {
+                    var parent = $(this).parent();
+                    if (this.selectedIndex == this.length - 1) {
+                        parent.find('select.form-control').addClass('group-left');
+                        parent.find('input.form-control').prop('disabled', false).removeClass('hidden').focus();
+                    }
+                    else {
+                        parent.find('select.form-control').removeClass('group-left');
+                        parent.find('input.form-control').addClass('hidden').prop('disabled', true);
+                    }
+                }
+
+                $('#brand').change(changeSelectGroup);
+                $('#result').change(changeSelectGroup);
+                $('#used').change(function() {
+                    if( this.checked ) {
+                        $('#usedOptions').removeClass("hidden");
+                    }
+                    else {
+                        $('#usedOptions').addClass("hidden");
+                    }
+                });
+            });
+
+
