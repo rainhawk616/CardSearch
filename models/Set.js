@@ -1,9 +1,9 @@
 "use strict";
 
 var Sequelize = require('sequelize');
-var bcrypt = require('bcrypt');
+var utils = require('../utils');
 
-module.exports = function (sequelize, DataTypes) {
+module.exports = function (sequelize) {
     return sequelize.define("Set",
         {
             setid: {
@@ -25,45 +25,29 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: false,
                 unique: true
             },
-            gathererCode: {
-                field: "gatherercode",
-                type: Sequelize.STRING,
-                allowNull: false,
-                unique: true
-            },
-            magicCardsInfoCode: {
-                field: "magiccardsinfocode",
-                type: Sequelize.STRING,
-                allowNull: false,
-                unique: true
+            complete: {
+                field: "complete",
+                type: Sequelize.BOOLEAN,
+                default: false
             },
             releaseDate: {
                 field: "releasedate",
                 type: Sequelize.DATE,
-                allowNull: false
+                allowNull: true,
+                get: function()  {
+                    return utils.formatDate(this.getDataValue('releaseDate'));
+                }
             },
-            mkm_name: {
-                field: "mkmname",
+            gathererCode: {
+                field: "gatherercode",
                 type: Sequelize.STRING,
-                allowNull: false,
-                unique: true
-            },
-            mkm_id: {
-                field: "mkmid",
-                type: Sequelize.INTEGER,
-                allowNull: false,
-                unique: true
-            },
-            oldCode: {
-                field: "oldcode",
-                type: Sequelize.STRING,
-                allowNull: false,
+                allowNull: true,
                 unique: true
             },
             onlineOnly: {
                 field: "onlineonly",
                 type: Sequelize.BOOLEAN,
-                allowNull: false
+                allowNull: true
             }
         },
         {

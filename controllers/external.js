@@ -3,7 +3,7 @@ var models = require('../models');
 var passport = require('passport');
 
 module.exports = {
-    registerRoutes: function (app, passportConfig) {
+    registerRoutes: function (app) {
         app.get('/', this.index);
         app.get('/about', this.about);
         app.get('/contact', this.contact);

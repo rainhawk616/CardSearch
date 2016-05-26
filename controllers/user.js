@@ -4,12 +4,19 @@ var Sequelize = require('../models/index').Sequelize;
 var Promise = require("bluebird");
 
 module.exports = {
-    registerRoutes: function (app, passportConfig) {
-        app.get('/user/dashboard', passportConfig.isUserAuthorized, this.dashboard);
-        app.get('/user/products', passportConfig.isUserAuthorized, this.products);
-        app.get('/user/product', passportConfig.isUserAuthorized, this.productcreate);
-        app.post('/user/product', passportConfig.isUserAuthorized, this.productcreatepost);
-        app.get('/user/product/:productid', passportConfig.isUserAuthorized, this.product);
+    registerRoutes: function (app) {
+        app.get('/user/*', this.authorize);
+        app.get('/user/dashboard', this.dashboard);
+        app.get('/user/products', this.products);
+        app.get('/user/product', this.productcreate);
+        app.post('/user/product', this.productcreatepost);
+        app.get('/user/product/:productid', this.product);
+    },
+    authorize: function(req,res,next) {
+        if (req.isAuthenticated()) {
+            return next();
+        }
+        res.redirect('/login');
     },
     dashboard: function (req, res, next) {
         res.render('user/dashboard', {

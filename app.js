@@ -7,6 +7,7 @@ require('dotenv').config({path: '../.env', silent: true});
  * Module dependencies.
  */
 var express = require('express');
+var multer  =   require('multer');
 var app = express();
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
@@ -14,13 +15,12 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var expressValidator = require('express-validator');
-
 var session = require('express-session');
 var sequelize = require('./models/index').sequelize;
 var SequelizeStore = require('connect-session-sequelize')(session.Store);
 var flash = require('express-flash');
 var passport = require('passport');
-var passportConfig = require('./config/passport');
+
 /**
  * Express configuration.
  */
@@ -31,6 +31,10 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+
+/**
+ * Session configuration
+ */
 app.use(session({
     name: 'NodeExpressPsql',
     secret: 'rootroot',
@@ -44,9 +48,7 @@ app.use(session({
 }));
 
 app.use(logger('dev'));
-
 app.use(express.static(path.join(__dirname, 'public'), {maxAge: 31557600000}));
-
 app.use(expressValidator());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -66,9 +68,9 @@ var adminController = require('./controllers/admin.js');
 /**
  * Routes
  */
-externalController.registerRoutes(app, passportConfig);
-userController.registerRoutes(app, passportConfig);
-adminController.registerRoutes(app, passportConfig);
+externalController.registerRoutes(app);
+userController.registerRoutes(app);
+adminController.registerRoutes(app);
 
 /**
  * Exception handlers

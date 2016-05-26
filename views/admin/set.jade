@@ -1,0 +1,23 @@
+extends layout
+
+block content
+    h1= title
+
+    table.table
+        tbody
+            tr
+                td Code
+                td=set.code
+            tr
+                td Release Date
+                td=set.releaseDate
+
+    div #{JSON.stringify(set)}
+
+    form(action="/admin/set/#{set.setid}/import" method="POST" enctype="multipart/form-data")
+        .form-group
+            label(for="setimport") Import Set Information
+            p(class="help-block") Upload set information in JSON format
+            input#setimport(type="file" name="setimport")
+        .form-group
+            button.btn.btn-primary(type="submit") Import
