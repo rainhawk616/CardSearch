@@ -12,12 +12,25 @@ block content
                 td Release Date
                 td=set.releaseDate
 
-    div #{JSON.stringify(set)}
+    if set.Printings.length > 0
+        a.btn.btn-default(onclick="back()") Back
+        table.table
+            thead
+                tr
+                    th Name
+                    th Mana Cost
+                    th Rarity
+            tbody
+                each printing in set.Printings
+                    tr
+                        td #{printing.Card.name}
+                        td !{utils.magicify(printing.Card.manaCost)}
+                        td
+                            .ss(class="ss-#{set.code.toLowerCase()} rarity-#{printing.Rarity.description}")
 
-    form(action="/admin/set/#{set.setid}/import" method="POST" enctype="multipart/form-data")
-        .form-group
-            label(for="setimport") Import Set Information
-            p(class="help-block") Upload set information in JSON format
-            input#setimport(type="file" name="setimport")
-        .form-group
-            button.btn.btn-primary(type="submit") Import
+    else
+        p No cards exists for this set
+
+    a.btn.btn-default(onclick="back()") Back
+
+    div #{JSON.stringify(set)}

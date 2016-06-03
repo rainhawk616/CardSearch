@@ -12,5 +12,12 @@ module.exports = {
         var year = date.getFullYear();
 
         return month + "/" + day + "/" + year;
+    },
+    magicify: function (string) {
+        if( string === null || string == undefined || string === '' || string.indexOf('{') === -1)
+            return string;
+        return string.replace(/{(\w)}/g, function (fullReplace, capture) {
+            return '<div class="ms ms-cost ms-' + capture.toLowerCase() + ' "></div>';
+        });
     }
 };

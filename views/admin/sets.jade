@@ -3,37 +3,27 @@ extends layout
 block content
     h1= title
 
-    form(action="/admin/setsimport" method="POST" enctype="multipart/form-data")
-        .form-group
-            label(for="setsimport") Import New Sets
-            input#setsimport(type="file" name="setsimport")
-            p(class="help-block") Upload sets information in JSON format
-            button.btn.btn-primary(type="submit") Submit
-
     if sets.length > 0
-        table.table
+        table.table.set
             thead
                 tr
                     th
                     th Name
                     th Code
                     th Release Date
-                    th Cards Uploaded
                     th
             tbody
                 each set in sets
-                    tr(class="#{set.complete===true?'success':'danger'}")
-                        td #{set.setid}
+                    tr.clickable(data-href="/admin/set/#{set.setid}")
+                        td
+                            .ss.ss-large(class="ss-#{set.code.toLowerCase()}")
                         td #{set.name}
                         td #{set.code}
                         td #{set.releaseDate}
                         td
-                            if set.complete === true
-                                .glyphicon.glyphicon-check
-                            else
-                                .glyphicon.glyphicon-remove
-                        td
                             a(href="/admin/set/#{set.setid}")
-                                .glyphicon.glyphicon-pencil
+                                .glyphicon.glyphicon-edit
     else
         p No sets have been added yet
+
+    a.btn.btn-primary(href="/admin/set/import") Import Set

@@ -16,12 +16,43 @@ module.exports = function (sequelize, DataTypes) {
                 type: Sequelize.STRING,
                 allowNull: false,
                 unique: true
+            },
+            manaCost: {
+                field: "manacost",
+                type: Sequelize.STRING
+            },
+            cmc: {
+                type: Sequelize.INTEGER
+            },
+            power: {
+                type: Sequelize.STRING
+            },
+            toughness: {
+                type: Sequelize.STRING
+            },
+            text: {
+                type: Sequelize.TEXT
+            },
+            reserved: {
+                type: Sequelize.BOOLEAN
+            },
+            loyalty: {
+                type: Sequelize.INTEGER
             }
         },
         {
-            tableName: 'users',
+            tableName: 'cards',
             timestamps: false,
-            paranoid: false
+            paranoid: false,
+            classMethods: {
+                associate: function (models) {
+                    Card.belongsTo(models.Layout, {
+                        foreignKey: {
+                            name: 'layoutid'
+                        }
+                    });
+                }
+            }
         }
     );
 

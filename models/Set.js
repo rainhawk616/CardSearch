@@ -4,7 +4,7 @@ var Sequelize = require('sequelize');
 var utils = require('../utils');
 
 module.exports = function (sequelize) {
-    return sequelize.define("Set",
+    var Set = sequelize.define("Set",
         {
             setid: {
                 field: "setid",
@@ -24,11 +24,6 @@ module.exports = function (sequelize) {
                 type: Sequelize.STRING,
                 allowNull: false,
                 unique: true
-            },
-            complete: {
-                field: "complete",
-                type: Sequelize.BOOLEAN,
-                default: false
             },
             releaseDate: {
                 field: "releasedate",
@@ -51,9 +46,36 @@ module.exports = function (sequelize) {
             }
         },
         {
-            tableName: 'set',
+            tableName: 'sets',
             timestamps: false,
-            paranoid: false
+            paranoid: false,
+            classMethods: {
+                associate: function (models) {
+                    Set.belongsTo(models.Border, {
+                        foreignKey: {
+                            name: 'borderid',
+                            allowNull: false
+                        }
+                    });
+                    Set.belongsTo(models.SetType, {
+                        foreignKey: {
+                            name: 'settypeid',
+                            allowNull: false
+                        }
+                    });
+                    Set.belongsTo(models.Block, {
+                        foreignKey: {
+                            name: 'blockid'
+                        }
+                    });
+                    Set.hasMany(models.Printing, {
+                        foreignKey: 'setid',
+                        constraints: true
+                    });
+                }
+            }
         }
     );
+
+    return Set;
 };
