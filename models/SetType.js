@@ -20,7 +20,12 @@ module.exports = function (sequelize, DataTypes) {
         {
             tableName: 'settypes',
             timestamps: false,
-            paranoid: false
+            paranoid: false,
+            indexes: [
+                {
+                    fields: ['description']
+                }
+            ]
         }
     );
 

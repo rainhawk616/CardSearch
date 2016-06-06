@@ -30,7 +30,12 @@ module.exports = function (sequelize, DataTypes) {
                         }
                     });
                 }
-            }
+            },
+            indexes: [
+                {
+                    fields: ['printingid']
+                }
+            ]
         }
     );
 

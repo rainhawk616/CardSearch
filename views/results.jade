@@ -1,0 +1,19 @@
+extends layout
+
+block content
+    h1=title
+    if results.length > 0
+        a.btn.btn-default(onclick="back()") Back
+        table.table
+            thead
+                tr
+                    th Name
+                    th Mana Cost
+            tbody
+                each card in results
+                    tr
+                        td #{card.name}
+                        td !{utils.magicify(card.manaCost)}
+    else
+        p No matching results found. Try searching again with different or fewer parameters.
+    a.btn.btn-default(onclick="back()") Back

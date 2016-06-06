@@ -32,7 +32,12 @@ module.exports = function (sequelize, DataTypes) {
                         }
                     });
                 }
-            }
+            },
+            indexes: [
+                {
+                    fields: ['subtypeid','cardid']
+                }
+            ]
         }
     );
 

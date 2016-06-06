@@ -1,0 +1,16 @@
+extends layout
+
+block content
+    h1=title
+    form(action="/results" method="get")
+        .form-group
+            label(for="name") Name
+            input#name.form-control(type="text" name="name" placeholder="Name")
+        .form-group
+            label(for="text") Oracle Text
+            input#text.form-control(type="text" name="text" placeholder="Oracle Text")
+        .form-group
+            label(for="set") Colors
+            input#set.form-control(type="text" name="set" placeholder="Set")
+        .form-group.btn-toolbar
+            button.btn.btn-primary(type="submit") Search

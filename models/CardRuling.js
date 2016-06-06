@@ -1,7 +1,7 @@
 "use strict";
 
 var Sequelize = require('sequelize');
-var utils = require('../utils');
+var utils = require('../utils/utils');
 
 module.exports = function (sequelize, DataTypes) {
     var CardRuling = sequelize.define("CardRuling",
@@ -38,7 +38,12 @@ module.exports = function (sequelize, DataTypes) {
                         }
                     });
                 }
-            }
+            },
+            indexes: [
+                {
+                    fields: ['cardid']
+                }
+            ]
         }
     );
 

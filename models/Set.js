@@ -1,7 +1,7 @@
 "use strict";
 
 var Sequelize = require('sequelize');
-var utils = require('../utils');
+var utils = require('../utils/utils');
 
 module.exports = function (sequelize) {
     var Set = sequelize.define("Set",
@@ -29,7 +29,7 @@ module.exports = function (sequelize) {
                 field: "releasedate",
                 type: Sequelize.DATE,
                 allowNull: true,
-                get: function()  {
+                get: function () {
                     return utils.formatDate(this.getDataValue('releaseDate'));
                 }
             },
@@ -73,7 +73,12 @@ module.exports = function (sequelize) {
                         constraints: true
                     });
                 }
-            }
+            },
+            indexes: [
+                {
+                    fields: ['borderid', 'settypeid', 'blockid']
+                }
+            ]
         }
     );
 

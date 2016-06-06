@@ -2,7 +2,7 @@
 
 var Sequelize = require('sequelize');
 var bcrypt = require('bcrypt');
-var utils = require('../utils');
+var utils = require('../utils/utils');
 
 module.exports = function (sequelize, DataTypes) {
     var Printing = sequelize.define("Printing",
@@ -52,7 +52,7 @@ module.exports = function (sequelize, DataTypes) {
             releaseDate: {
                 field: "releasedate",
                 type: Sequelize.DATE,
-                get: function()  {
+                get: function () {
                     return utils.formatDate(this.getDataValue('releaseDate'));
                 }
             },
@@ -88,7 +88,12 @@ module.exports = function (sequelize, DataTypes) {
                         }
                     })
                 }
-            }
+            },
+            indexes: [
+                {
+                    fields: ['cardid', 'rarityid', 'setid']
+                }
+            ]
         }
     );
 

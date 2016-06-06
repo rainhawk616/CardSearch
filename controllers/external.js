@@ -12,6 +12,8 @@ module.exports = {
         app.get('/signup', this.signup);
         app.post('/signup', this.postsignup);
         app.get('/logout', this.logout);
+        app.get('/search', this.search);
+        app.get('/results', this.results);
     },
     index: function (req, res, next) {
         models.User.findAll().then(function (users) {
@@ -133,6 +135,38 @@ module.exports = {
         req.flash('success', {msg: 'logged out'});
         req.session.save(function () {
             res.redirect('/login');
+        });
+    },
+    search: function (req, res) {
+        res.render('search', {title: 'Search'});
+    },
+    results: function (req, res) {
+        console.log("query:", req.query);
+
+        var where = {};
+        var i = 0;
+
+        if (req.query.name) {
+            var names = req.query.name.split(' ');
+
+            console.log(JSON.stringify(names));
+            where['name'] = {
+                $and: []
+            };
+            for(i = 0; i < names.length; i++ ) {
+                 where['name']['$and'].push({'$ilike': '%' + names[i] + '%'});
+            }
+        }
+
+        console.log('where:', JSON.stringify(where, null, 2));
+
+        models.Card.findAll({
+            where: where
+        }).then(function (results) {
+            res.render('results', {
+                title: 'Results',
+                results: results
+            });
         });
     }
 };

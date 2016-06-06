@@ -49,7 +49,12 @@ module.exports = function (sequelize, DataTypes) {
                         return done(err, res);
                     });
                 }
-            }
+            },
+            indexes: [
+                {
+                    fields: ['email']
+                }
+            ]
         }
     );
 

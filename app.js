@@ -105,6 +105,6 @@ app.use(function (err, req, res) {
     });
 });
 
-app.locals.utils = require('./utils');
+app.locals.utils = require('./utils/utils');
 
 module.exports = app;
