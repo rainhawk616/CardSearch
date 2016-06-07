@@ -142,19 +142,22 @@ module.exports = {
     },
     results: function (req, res) {
         console.log("query:", req.query);
+        console.log("where:", where);
 
         var where = {};
         var i = 0;
 
         if (req.query.name) {
             var names = req.query.name.split(' ');
+            for (i = 0; i < names.length; i++) {
+                andLike(where, 'name', names[i]);
+            }
+        }
 
-            console.log(JSON.stringify(names));
-            where['name'] = {
-                $and: []
-            };
-            for(i = 0; i < names.length; i++ ) {
-                 where['name']['$and'].push({'$ilike': '%' + names[i] + '%'});
+        if (req.query.or) {
+            var ors = req.query.or.split(' ');
+            for (i = 0; i < ors.length; i++) {
+                orLike(where, 'name', ors[i]);
             }
         }
 
@@ -170,3 +173,40 @@ module.exports = {
         });
     }
 };
+
+function andLike(where, fieldName, value) {
+    like(where, '$and', fieldName, value);
+}
+
+function orLike(where, fieldName, value) {
+    like(where, '$or', fieldName, value);
+}
+
+function like(where, opperator, fieldName, value) {
+    if( value === null || value === undefined || value === '')
+        return;
+    
+    if (where === null || where === undefined)
+        throw new Error('test');
+
+    if (!where.hasOwnProperty(fieldName)) {
+        where[fieldName] = {};
+    }
+
+    var field = where[fieldName];
+
+    if (!field.hasOwnProperty('$and')) {
+        field['$and'] = {};
+    }
+
+    var highLevelAnd = field['$and'];
+
+    if (!highLevelAnd.hasOwnProperty(opperator)) {
+        highLevelAnd[opperator] = [];
+    }
+
+    var opp = highLevelAnd[opperator];
+
+    opp.push({'$ilike': '%' + value + '%'});
+}
+

@@ -7,10 +7,24 @@ block content
             label(for="name") Name
             input#name.form-control(type="text" name="name" placeholder="Name")
         .form-group
-            label(for="text") Oracle Text
-            input#text.form-control(type="text" name="text" placeholder="Oracle Text")
+            label(for="or") Or Name
+            input#or.form-control(type="text" name="or" placeholder="Name")
         .form-group
-            label(for="set") Colors
-            input#set.form-control(type="text" name="set" placeholder="Set")
-        .form-group.btn-toolbar
-            button.btn.btn-primary(type="submit") Search
+            .input-group
+                select.selectpicker
+                    option(value='and') And
+                    option(value='or') Or
+                    option(value='not') Not
+                input.form-control(type="text" placeholder="Name")
+                .input-group-btn
+                    a.btn.btn-success
+                        .glyphicon.glyphicon-plus
+        input#query(type='hidden' name="query")
+
+        p Plus should do the following
+        ul
+            li Add the contents to our hidden json value
+            li redraw query display using the hidden json value
+            li clear the value from the input where the plus was just clicked
+            li structure should be {'key1':{field:'',opperator:'',comparitor:'',value''}}
+

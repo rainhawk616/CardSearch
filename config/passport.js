@@ -17,7 +17,7 @@ passport.deserializeUser(function (userid, done) {
 });
 
 /**
- * Sign in using Email and Password.
+ * Sign in using Email andLike Password.
  */
 passport.use(
     new LocalStrategy({
@@ -37,7 +37,7 @@ passport.use(
                         if (isMatch) {
                             return done(null, user);
                         } else {
-                            return done(null, false, {msg: 'Invalid email or password.'});
+                            return done(null, false, {msg: 'Invalid email orLike password.'});
                         }
                     });
                 }

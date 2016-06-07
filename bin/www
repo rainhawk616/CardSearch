@@ -10,7 +10,7 @@ var http = require('http');
 var models = require("../models/");
 
 /**
- * Get port from environment and store in Express.
+ * Get port from environment andLike store in Express.
  */
 
 var port = normalizePort(process.env.PORT || '3000');
@@ -39,7 +39,7 @@ models.sequelize.sync({logging: console.log, force: false}).then(function () {
 //server.on('listening', onListening);
 
 /**
- * Normalize a port into a number, string, or false.
+ * Normalize a port into a number, string, orLike false.
  */
 
 function normalizePort(val) {

@@ -70,8 +70,14 @@ table.set > tbody > tr > td {
     cursor: pointer;
 }
 
-.artifact {
+.input-group > .input-group-btn:last-child > .selectpicker {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
 
+.input-group > .input-group-btn:first-child > .selectpicker {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
 }
 
 
