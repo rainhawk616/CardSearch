@@ -70,15 +70,20 @@ table.set > tbody > tr > td {
     cursor: pointer;
 }
 
-.input-group > .input-group-btn:last-child > .selectpicker {
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+.name {
+    white-space: nowrap;
 }
 
-.input-group > .input-group-btn:first-child > .selectpicker {
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
+.mana-cost {
+    white-space: nowrap;
 }
 
+.oracle-text {
+    white-space: pre-line;
+}
+
+.input-group > .form-control > .dropdown-toggle {
+    border-radius: 0px;
+}
 
 

@@ -2,6 +2,8 @@ extends layout
 
 block content
     h1=title
+    label(for'query') Query
+    pre#query=JSON.stringify(query, null, 2)
     if results.length > 0
         a.btn.btn-default(onclick="back()") Back
         table.table
@@ -9,11 +11,13 @@ block content
                 tr
                     th Name
                     th Mana Cost
+                    th Oracle Text
             tbody
                 each card in results
                     tr
-                        td #{card.name}
-                        td !{utils.magicify(card.manaCost)}
+                        td.name #{card.name}
+                        td.mana-cost !{utils.magicify(card.manaCost)}
+                        td.oracle-text !{utils.magicify(card.text)}
     else
         p No matching results found. Try searching again with different or fewer parameters.
     a.btn.btn-default(onclick="back()") Back

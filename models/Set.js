@@ -43,6 +43,11 @@ module.exports = function (sequelize) {
                 field: "onlineonly",
                 type: Sequelize.BOOLEAN,
                 allowNull: true
+            },
+            oldCode: {
+                field: "oldcode",
+                type: Sequelize.STRING,
+                unique: true
             }
         },
         {

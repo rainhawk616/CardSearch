@@ -1,6 +1,7 @@
 var models = require('../models');
 //var express = require('express');
 var passport = require('passport');
+var Promise = require("bluebird");
 
 module.exports = {
     registerRoutes: function (app) {
@@ -13,9 +14,10 @@ module.exports = {
         app.post('/signup', this.postsignup);
         app.get('/logout', this.logout);
         app.get('/search', this.search);
-        app.get('/results', this.results);
+        app.get('/results', this.getResults);
+        app.post('/results', this.postResults);
     },
-    index: function (req, res, next) {
+    index: function (req, res) {
         models.User.findAll().then(function (users) {
             res.render('index', {
                 title: 'Index',
@@ -23,13 +25,13 @@ module.exports = {
             });
         });
     },
-    about: function (req, res, next) {
+    about: function (req, res) {
         res.render('about', {title: 'About'});
     },
-    contact: function (req, res, next) {
+    contact: function (req, res) {
         res.render('contact', {title: 'Contact'});
     },
-    login: function (req, res, next) {
+    login: function (req, res) {
         res.render('login', {title: 'Login'});
     },
     postlogin: function (req, res, next) {
@@ -78,10 +80,10 @@ module.exports = {
             })(req, res, next);
         }
     },
-    signup: function (req, res, next) {
+    signup: function (req, res) {
         res.render('signup', {title: 'Sign Up'});
     },
-    postsignup: function (req, res, next) {
+    postsignup: function (req, res) {
         req.check('email', 'Email is not valid').isEmail();
         req.check('password', 'Password must be at least 4 characters long').len(4);
         req.check('confirmPassword', 'Passwords do not match').equals(req.body.password);
@@ -138,37 +140,89 @@ module.exports = {
         });
     },
     search: function (req, res) {
-        res.render('search', {title: 'Search'});
+        var supertypes = models.Supertype.findAll();
+
+        Promise.all([supertypes])
+            .spread(function (supertypes) {
+                res.render('search', {
+                    title: 'Search',
+                    supertypes: supertypes
+                });
+            });
     },
-    results: function (req, res) {
-        console.log("query:", req.query);
-        console.log("where:", where);
+    getResults: function (req, res) {
+        res.redirect('/search');
+    },
+    postResults: function (req, res) {
+        console.log("body:", req.body);
 
         var where = {};
+        var supertypeWhere = {};
         var i = 0;
+        var query = JSON.parse(decodeURIComponent(req.body.query));
 
-        if (req.query.name) {
-            var names = req.query.name.split(' ');
-            for (i = 0; i < names.length; i++) {
-                andLike(where, 'name', names[i]);
-            }
-        }
+        console.log('query:', query);
 
-        if (req.query.or) {
-            var ors = req.query.or.split(' ');
-            for (i = 0; i < ors.length; i++) {
-                orLike(where, 'name', ors[i]);
+        for (var uuid in query) {
+            var clause = query[uuid];
+            var field = clause['field'].toLowerCase();
+            var operator = clause['operator'];
+            var comparator = clause['comparator'];
+            var value = clause['value'];
+
+            //TODO should we still do the split?
+            // var values = value.split(' ');
+            // for (i = 0; i < values.length; i++) {
+            //     andLike(where, 'name', values[i]);
+            // }
+
+            /*
+             Like fields
+             */
+            if (field === 'name'
+                || field === 'text') {
+                if (operator === 'and') {
+                    andLike(where, field, value);
+                }
+                else if (operator === 'or') {
+                    orLike(where, field, value);
+                }
+                else if (operator === 'not') {
+                    notLike(where, field, value);
+                }
             }
+
+            /*
+            // Supertype
+            //  */
+            // if( field === 'supertype') {
+            //     if (operator === 'and') {
+            //         andIn(supertypeWhere, 'supertypeid', value);
+            //     }
+            //     else if (operator === 'or') {
+            //         orIn(supertypeWhere, 'supertypeid', value);
+            //     }
+            //     else if (operator === 'not') {
+            //         notIn(supertypeWhere, 'supertypeid', value);
+            //     }
+            // }
         }
 
         console.log('where:', JSON.stringify(where, null, 2));
 
         models.Card.findAll({
+            include: [{
+                model: models.CardSupertype,
+                include: [{
+                    model: models.Supertype
+                }]
+            }],
             where: where
         }).then(function (results) {
             res.render('results', {
                 title: 'Results',
-                results: results
+                results: results,
+                query: where
             });
         });
     }
@@ -182,10 +236,14 @@ function orLike(where, fieldName, value) {
     like(where, '$or', fieldName, value);
 }
 
-function like(where, opperator, fieldName, value) {
-    if( value === null || value === undefined || value === '')
+function notLike(where, fieldName, value) {
+    like(where, '$and', fieldName, value, true);
+}
+
+function like(where, operator, fieldName, value, not) {
+    if (value === null || value === undefined || value === '')
         return;
-    
+
     if (where === null || where === undefined)
         throw new Error('test');
 
@@ -198,15 +256,59 @@ function like(where, opperator, fieldName, value) {
     if (!field.hasOwnProperty('$and')) {
         field['$and'] = {};
     }
+    var outerAndOperator = field['$and'];
 
-    var highLevelAnd = field['$and'];
-
-    if (!highLevelAnd.hasOwnProperty(opperator)) {
-        highLevelAnd[opperator] = [];
+    if (!outerAndOperator.hasOwnProperty(operator)) {
+        outerAndOperator[operator] = [];
     }
+    var innerOperator = outerAndOperator[operator];
 
-    var opp = highLevelAnd[opperator];
+    var clause = {};
+    clause[(not?'$notILike':'$iLike')] = '%' + value + '%';
 
-    opp.push({'$ilike': '%' + value + '%'});
+    innerOperator.push(clause);
 }
 
+function andIn(where, fieldName, value) {
+    arrayIn(where, '$and', fieldName, value);
+}
+
+function onIn(where, fieldName, value) {
+    arrayIn(where, '$or', fieldName, value);
+}
+
+function notIn(where, fieldName, value) {
+    arrayIn(where, '$and', fieldName, value, true);
+}
+
+function arrayIn(where, operator, fieldName, value, not) {
+    if (value === null || value === undefined || value === '')
+        return;
+
+    if (where === null || where === undefined)
+        throw new Error('test');
+
+    if (!where.hasOwnProperty(fieldName)) {
+        where[fieldName] = {};
+    }
+
+    var field = where[fieldName];
+
+    if (!field.hasOwnProperty('$and')) {
+        field['$and'] = {};
+    }
+    var outerAndOperator = field['$and'];
+
+    if (!outerAndOperator.hasOwnProperty(operator)) {
+        outerAndOperator[operator] = {};
+    }
+    var innerOperator = outerAndOperator[operator];
+
+    var comparator = (not?'$notIn':'$in');
+    if (!innerOperator.hasOwnProperty(comparator)) {
+        innerOperator[comparator] = [];
+    }
+    var oppList = innerOperator[comparator];
+
+    oppList.push(value);
+}

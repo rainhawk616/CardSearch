@@ -11,6 +11,12 @@ if messages
                 i.fa.fa-times-circle-o
             for info in messages.info
                 div= info.msg
+    if messages.warning
+        .alert.alert-warning.fade.in.col-md-4.col-md-offset-4
+            button.close(type='button', data-dismiss='alert')
+                i.fa.fa-times-circle-o
+            for warning in messages.warning
+                div= warning.msg
     if messages.success
         .alert.alert-success.fade.in.col-md-4.col-md-offset-4
             button.close(type='button', data-dismiss='alert')

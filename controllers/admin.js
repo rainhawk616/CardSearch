@@ -104,6 +104,7 @@ module.exports = {
         var _typeMap;
         var _subtypeMap;
         var _languageMap;
+        var _watermarkMap;
 
         for (var setField in set) {
             if (set.hasOwnProperty(setField)) {
@@ -122,6 +123,7 @@ module.exports = {
                     && setField !== 'block'
                     && setField !== 'translations' //TODO set translations not implemented
                     && setField !== 'magicRaritiesCodes' //TODO set magicRaritiesCodes not implemented
+                    && setField !== 'oldCode'
                 ) {
                     req.flash('errors', {msg: "Unsupported set field " + setField + " found. (" + JSON.stringify(setField) + ":" + JSON.stringify(set[setField]) + ")"});
                     req.session.save(function () {
@@ -132,217 +134,245 @@ module.exports = {
             }
         }
 
-        var cards = set.cards;
-        var colorIdentityMap = {};
-        var colorMap = {};
-        var layoutMap = {};
-        var formatMap = {};
-        var legalityMap = {};
-        var manaMap = {};
-        var rarityMap = {};
-        var subtypeMap = {};
-        var typeMap = {};
-        var supertypeMap = {};
-        var languageMap = {};
+        models.Set.findAll({
+            where: {
+                name: set.name
+            }
+        }).then(function (sets) {
+            if (sets.length > 0) {
+                req.flash('warning', {msg: set.name + ' (' + set.code + ') has already been imported'});
+                req.session.save(function () {
+                    res.redirect('/admin/set/import');
+                });
+            }
+            else {
+                var cards = set.cards;
+                var colorIdentityMap = {};
+                var colorMap = {};
+                var layoutMap = {};
+                var formatMap = {};
+                var legalityMap = {};
+                var manaMap = {};
+                var rarityMap = {};
+                var subtypeMap = {};
+                var typeMap = {};
+                var supertypeMap = {};
+                var languageMap = {};
+                var watermarkMap = {};
 
-        for (var index = 0; index < cards.length; index++) {
-            var card = cards[index];
+                for (var index = 0; index < cards.length; index++) {
+                    var card = cards[index];
 
-            for (var cardField in card) {
-                if (card.hasOwnProperty(cardField)) {
-                    /*
-                     Discover type fields
-                     */
-                    var i = 0;
-                    if (cardField == 'colorIdentity') {
-                        for (i = 0; i < card[cardField].length; i++) {
-                            colorIdentityMap[card[cardField][i]] = null;
+                    for (var cardField in card) {
+                        if (card.hasOwnProperty(cardField)) {
+                            /*
+                             Discover type fields
+                             */
+                            var i = 0;
+                            if (cardField == 'colorIdentity') {
+                                for (i = 0; i < card[cardField].length; i++) {
+                                    colorIdentityMap[card[cardField][i]] = null;
+                                }
+                            }
+                            else if (cardField == 'colors') {
+                                for (i = 0; i < card[cardField].length; i++) {
+                                    colorMap[card[cardField][i]] = null;
+                                }
+                            }
+                            else if (cardField == 'layout') {
+                                layoutMap[card[cardField]] = null;
+                            }
+                            else if (cardField == 'legalities') {
+                                for (i = 0; i < card[cardField].length; i++) {
+                                    formatMap[card[cardField][i]['format']] = null;
+                                    legalityMap[card[cardField][i]['legality']] = null;
+                                }
+                            }
+                            else if (cardField == 'manaCost') {
+                                var symbols = card[cardField];
+                                var symbolRegex = /({[^{}]+})/g;
+                                var mana;
+                                while (mana = symbolRegex.exec(symbols)) {
+                                    manaMap[mana[0]] = null;
+                                }
+                            }
+                            else if (cardField == 'rarity') {
+                                rarityMap[card[cardField]] = null;
+                            }
+                            else if (cardField == 'watermark') {
+                                watermarkMap[card[cardField]] = null;
+                            }
+                            else if (cardField == 'subtypes') {
+                                for (i = 0; i < card[cardField].length; i++) {
+                                    subtypeMap[card[cardField][i]] = null;
+                                }
+                            }
+                            else if (cardField == 'types') {
+                                for (i = 0; i < card[cardField].length; i++) {
+                                    typeMap[card[cardField][i]] = null;
+                                }
+                            }
+                            else if (cardField == 'supertypes') {
+                                for (i = 0; i < card['supertypes'].length; i++) {
+                                    supertypeMap[card['supertypes'][i]] = null;
+                                }
+                            }
+                            else if (cardField == 'foreignNames') {
+                                for (i = 0; i < card['foreignNames'].length; i++) {
+                                    languageMap[card['foreignNames'][i]['language']] = null;
+                                }
+                            }
+                            else if (cardField == 'artist'
+                                || cardField === 'cmc'
+                                || cardField === 'flavor'
+                                || cardField === 'id'
+                                || cardField === 'imageName'
+                                || cardField === 'mciNumber'
+                                || cardField === 'multiverseid'
+                                || cardField === 'name'
+                                || cardField === 'originalText'
+                                || cardField === 'originalType'
+                                || cardField === 'power'
+                                || cardField === 'printings'
+                                || cardField === 'text'
+                                || cardField === 'toughness'
+                                || cardField === 'type'
+                                || cardField === 'reserved'
+                                || cardField === 'rulings'
+                                || cardField === 'variations'
+                                || cardField === 'source'
+                                || cardField === 'number'
+                                || cardField === 'releaseDate'
+                                || cardField === 'border' //TODO should this be a type?
+                                || cardField === 'loyalty'
+                                || cardField === 'names'
+                                || cardField === 'starter'
+                                || cardField === 'timeshifted'
+                            ) {
+                                //Simple fields
+                            }
+                            else {
+                                req.flash('errors', {msg: "Unsupported card field " + cardField + " found. (" + JSON.stringify(cardField) + ":" + JSON.stringify(card[cardField]) + ")"});
+                                req.session.save(function () {
+                                    res.redirect('/admin/set/import');
+                                });
+                                return;
+                            }
                         }
-                    }
-                    else if (cardField == 'colors') {
-                        for (i = 0; i < card[cardField].length; i++) {
-                            colorMap[card[cardField][i]] = null;
-                        }
-                    }
-                    else if (cardField == 'layout') {
-                        layoutMap[card[cardField]] = null;
-                    }
-                    else if (cardField == 'legalities') {
-                        for (i = 0; i < card[cardField].length; i++) {
-                            formatMap[card[cardField][i]['format']] = null;
-                            legalityMap[card[cardField][i]['legality']] = null;
-                        }
-                    }
-                    else if (cardField == 'manaCost') {
-                        var symbols = card[cardField];
-                        var symbolRegex = /({[^{}]+})/g;
-                        var mana;
-                        while (mana = symbolRegex.exec(symbols)) {
-                            manaMap[mana[0]] = null;
-                        }
-                    }
-                    else if (cardField == 'rarity') {
-                        rarityMap[card[cardField]] = null;
-                    }
-                    else if (cardField == 'subtypes') {
-                        for (i = 0; i < card[cardField].length; i++) {
-                            subtypeMap[card[cardField][i]] = null;
-                        }
-                    }
-                    else if (cardField == 'types') {
-                        for (i = 0; i < card[cardField].length; i++) {
-                            typeMap[card[cardField][i]] = null;
-                        }
-                    }
-                    else if (cardField == 'supertypes') {
-                        for (i = 0; i < card['supertypes'].length; i++) {
-                            supertypeMap[card['supertypes'][i]] = null;
-                        }
-                    }
-                    else if (cardField == 'foreignNames') {
-                        for (i = 0; i < card['foreignNames'].length; i++) {
-                            languageMap[card['foreignNames'][i]['language']] = null;
-                        }
-                    }
-                    else if (cardField == 'artist'
-                        || cardField === 'cmc'
-                        || cardField === 'flavor'
-                        || cardField === 'id'
-                        || cardField === 'imageName'
-                        || cardField === 'mciNumber'
-                        || cardField === 'multiverseid'
-                        || cardField === 'name'
-                        || cardField === 'originalText'
-                        || cardField === 'originalType'
-                        || cardField === 'power'
-                        || cardField === 'printings'
-                        || cardField === 'text'
-                        || cardField === 'toughness'
-                        || cardField === 'type'
-                        || cardField === 'reserved'
-                        || cardField === 'rulings'
-                        || cardField === 'variations'
-                        || cardField === 'source'
-                        || cardField === 'number'
-                        || cardField === 'releaseDate'
-                        || cardField === 'border' //TODO should this be a type?
-                        || cardField === 'loyalty'
-                        || cardField === 'names'
-                    ) {
-                        //Simple fields
-                    }
-                    else {
-                        req.flash('errors', {msg: "Unsupported card field " + cardField + " found. (" + JSON.stringify(cardField) + ":" + JSON.stringify(card[cardField]) + ")"});
-                        req.session.save(function () {
-                            res.redirect('/admin/set/import');
-                        });
-                        return;
                     }
                 }
-            }
-        }
 
-        sequelize.transaction(function (transaction) {
-            //"border": "black"
-            var borderPromise = findOrCreateType(models.Border, {description: set.border}, transaction);
+                sequelize.transaction(function (transaction) {
+                    //"border": "black"
+                    var borderPromise = findOrCreateType(models.Border, {description: set.border}, transaction);
 
-            //"type": "core"
-            var setTypePromise = findOrCreateType(models.SetType, {description: set.type}, transaction);
+                    //"type": "core"
+                    var setTypePromise = findOrCreateType(models.SetType, {description: set.type}, transaction);
 
-            //block
-            var blockPromise = findOrCreateType(models.Block, {description: set.block}, transaction);
+                    //block
+                    var blockPromise = findOrCreateType(models.Block, {description: set.block}, transaction);
 
-            //color identity
-            var colorIdentityPromise = findOrCreateTypeMap(models.ColorIdentity, colorIdentityMap, transaction);
+                    //color identity
+                    var colorIdentityPromise = findOrCreateTypeMap(models.ColorIdentity, colorIdentityMap, transaction);
 
-            //color
-            var colorPromise = findOrCreateTypeMap(models.Color, colorMap, transaction);
+                    //color
+                    var colorPromise = findOrCreateTypeMap(models.Color, colorMap, transaction);
 
-            //layout
-            var layoutPromise = findOrCreateTypeMap(models.Layout, layoutMap, transaction);
+                    //layout
+                    var layoutPromise = findOrCreateTypeMap(models.Layout, layoutMap, transaction);
 
-            //format
-            var formatPromise = findOrCreateTypeMap(models.Format, formatMap, transaction);
+                    //format
+                    var formatPromise = findOrCreateTypeMap(models.Format, formatMap, transaction);
 
-            //legality
-            var legalityPromise = findOrCreateTypeMap(models.Legality, legalityMap, transaction);
+                    //legality
+                    var legalityPromise = findOrCreateTypeMap(models.Legality, legalityMap, transaction);
 
-            //mana
-            var manaPromise = findOrCreateTypeMap(models.Mana, manaMap, transaction);
+                    //mana
+                    var manaPromise = findOrCreateTypeMap(models.Mana, manaMap, transaction);
 
-            //rarity
-            var rarityPromise = findOrCreateTypeMap(models.Rarity, rarityMap, transaction);
+                    //rarity
+                    var rarityPromise = findOrCreateTypeMap(models.Rarity, rarityMap, transaction);
 
-            //supertype
-            var supertypePromise = findOrCreateTypeMap(models.Supertype, supertypeMap, transaction);
+                    //supertype
+                    var supertypePromise = findOrCreateTypeMap(models.Supertype, supertypeMap, transaction);
 
-            //type
-            var typePromise = findOrCreateTypeMap(models.Type, typeMap, transaction);
+                    //type
+                    var typePromise = findOrCreateTypeMap(models.Type, typeMap, transaction);
 
-            //subtype
-            var subtypePromise = findOrCreateTypeMap(models.Subtype, subtypeMap, transaction);
+                    //subtype
+                    var subtypePromise = findOrCreateTypeMap(models.Subtype, subtypeMap, transaction);
 
-            //language
-            var languagePromise = findOrCreateTypeMap(models.Language, languageMap, transaction);
+                    //language
+                    var languagePromise = findOrCreateTypeMap(models.Language, languageMap, transaction);
 
-            return Promise.all([borderPromise, setTypePromise, blockPromise, colorIdentityPromise, colorPromise, layoutPromise, formatPromise, legalityPromise, manaPromise, rarityPromise, supertypePromise, typePromise, subtypePromise, languagePromise])
-                .spread(function (border, setType, block, colorIdentityMap, colorMap, layoutMap, formatMap, legalityMap, manaMap, rarityMap, supertypeMap, typeMap, subtypeMap, languageMap) {
-                    _border = border;
-                    _setType = setType;
-                    _block = block;
-                    _colorIdentityMap = colorIdentityMap;
-                    _colorMap = colorMap;
-                    _layoutMap = layoutMap;
-                    _formatMap = formatMap;
-                    _legalityMap = legalityMap;
-                    _manaMap = manaMap;
-                    _rarityMap = rarityMap;
-                    _supertypeMap = supertypeMap;
-                    _typeMap = typeMap;
-                    _subtypeMap = subtypeMap;
-                    _languageMap = languageMap;
+                    //language
+                    var watermarkPromise = findOrCreateTypeMap(models.Watermark, watermarkMap, transaction);
 
-                    var newSet = models.Set.build({
-                        name: set.name,
-                        code: set.code,
-                        gathererCode: set.gathererCode,
-                        magicCardsInfoCode: set.magicCardsInfoCode,
-                        releaseDate: set.releaseDate,
-                        mkm_name: set.mkm_name,
-                        mkm_id: set.mkm_id
+                    return Promise.all([borderPromise, setTypePromise, blockPromise, colorIdentityPromise, colorPromise, layoutPromise, formatPromise, legalityPromise, manaPromise, rarityPromise, supertypePromise, typePromise, subtypePromise, languagePromise, watermarkPromise])
+                        .spread(function (border, setType, block, colorIdentityMap, colorMap, layoutMap, formatMap, legalityMap, manaMap, rarityMap, supertypeMap, typeMap, subtypeMap, languageMap, watermarkMap) {
+                            _border = border;
+                            _setType = setType;
+                            _block = block;
+                            _colorIdentityMap = colorIdentityMap;
+                            _colorMap = colorMap;
+                            _layoutMap = layoutMap;
+                            _formatMap = formatMap;
+                            _legalityMap = legalityMap;
+                            _manaMap = manaMap;
+                            _rarityMap = rarityMap;
+                            _supertypeMap = supertypeMap;
+                            _typeMap = typeMap;
+                            _subtypeMap = subtypeMap;
+                            _languageMap = languageMap;
+                            _watermarkMap = watermarkMap;
+
+                            var newSet = models.Set.build({
+                                name: set.name,
+                                code: set.code,
+                                gathererCode: set.gathererCode,
+                                magicCardsInfoCode: set.magicCardsInfoCode,
+                                releaseDate: set.releaseDate,
+                                mkm_name: set.mkm_name,
+                                mkm_id: set.mkm_id,
+                                starter: set.starter,
+                                oldcode: set.oldCode
+                            });
+
+                            newSet.setBorder(border, {save: false});
+                            newSet.setSetType(setType, {save: false});
+                            newSet.setBlock(block, {save: false});
+
+                            return newSet.save({transaction: transaction});
+                        }).then(function (newSet) {
+                            _set = newSet;
+
+                            var promises = [];
+                            for (var i = 0; i < cards.length; i++) {
+                                promises.push(findOrCreateCard(transaction, newSet, cards[i], _layoutMap, _colorIdentityMap, _colorMap, _formatMap, _legalityMap, _supertypeMap, _typeMap, _subtypeMap, _languageMap, _rarityMap, _watermarkMap));
+                            }
+                            return Promise.all(promises);
+                        });
+                    // .then(function (cards) {
+                    //     _cards = cards;
+                    // })
+                }).then(function (result) {
+                    req.flash('success', {msg: _set.name + ' (' + set.code + ') created'});
+                    req.session.save(function () {
+                        //TODO redirect to sets
+                        //res.redirect('/admin/sets');
+                        res.redirect('/admin/set/import');
                     });
+                }).catch(function (err) {
+                    // Transaction has been rolled back
+                    // err is whatever rejected the promise chain returned to the transaction callback
 
-                    newSet.setBorder(border, {save: false});
-                    newSet.setSetType(setType, {save: false});
-                    newSet.setBlock(block, {save: false});
-
-                    return newSet.save({transaction: transaction});
-                }).then(function (newSet) {
-                    _set = newSet;
-
-                    var promises = [];
-                    for (var i = 0; i < cards.length; i++) {
-                        promises.push(findOrCreateCard(transaction, newSet, cards[i], _layoutMap, _colorIdentityMap, _colorMap, _formatMap, _legalityMap, _supertypeMap, _typeMap, _subtypeMap, _languageMap, _rarityMap));
-                    }
-                    return Promise.all(promises);
+                    console.log("error", err);
+                    req.flash('errors', {msg: "An error occured while adding the new set."});
+                    req.session.save(function () {
+                        res.redirect('/admin/set/import');
+                    });
                 });
-            // .then(function (cards) {
-            //     _cards = cards;
-            // })
-        }).then(function (result) {
-            req.flash('success', {msg: _set.name + ' created'});
-            req.session.save(function () {
-                res.redirect('/admin/sets');
-            });
-        }).catch(function (err) {
-            // Transaction has been rolled back
-            // err is whatever rejected the promise chain returned to the transaction callback
-
-            console.log("error", err);
-            req.flash('errors', {msg: "An error occured while adding the new set."});
-            req.session.save(function () {
-                res.redirect('/admin/set/import');
-            });
+            }
         });
     }
 };
@@ -373,8 +403,10 @@ function findOrCreateTypeMap(model, map, transaction) {
     });
 }
 
-function findOrCreateCard(transaction, set, cardJson, layoutMap, colorIdentityMap, colorMap, formatMap, legalityMap, supertypeMap, typeMap, subtypeMap, languageMap, rarityMap) {
+function findOrCreateCard(transaction, set, cardJson, layoutMap, colorIdentityMap, colorMap, formatMap, legalityMap, supertypeMap, typeMap, subtypeMap, languageMap, rarityMap, watermarkMap) {
     var _card;
+
+    console.log('cardJson:', JSON.stringify(cardJson));
 
     return models.Card.findOrCreate({
         where: {name: cardJson.name},
@@ -542,7 +574,8 @@ function findOrCreateCard(transaction, set, cardJson, layoutMap, colorIdentityMa
             number: cardJson.number,
             releaseDate: cardJson.releaseDate,
             border: cardJson.border,
-            source: cardJson.source
+            source: cardJson.source,
+            timeshifted: cardJson.timeshifted
         });
 
         printing.setCard(_card, {save: false});
@@ -554,6 +587,14 @@ function findOrCreateCard(transaction, set, cardJson, layoutMap, colorIdentityMa
                 throw new Error(rarityKey + " not present in rarityMap");
             var rarity = rarityMap[rarityKey];
             printing.setRarity(rarity, {save: false});
+        }
+
+        if (cardJson.hasOwnProperty('watermark')) {
+            var watermarkKey = cardJson.watermark;
+            if (!watermarkMap.hasOwnProperty(watermarkKey))
+                throw new Error(watermarkKey + " not present in watermarkMap");
+            var watermark = watermarkMap[watermarkKey];
+            printing.setWatermark(watermark, {save: false});
 
         }
 

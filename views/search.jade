@@ -2,29 +2,119 @@ extends layout
 
 block content
     h1=title
-    form(action="/results" method="get")
+    .col-md-6.col-xs-12
         .form-group
-            label(for="name") Name
-            input#name.form-control(type="text" name="name" placeholder="Name")
-        .form-group
-            label(for="or") Or Name
-            input#or.form-control(type="text" name="or" placeholder="Name")
-        .form-group
-            .input-group
-                select.selectpicker
+            label Name
+            .input-group(data-field='name' data-field-name='Name')
+                select.selectpicker.operator
                     option(value='and') And
                     option(value='or') Or
                     option(value='not') Not
-                input.form-control(type="text" placeholder="Name")
+                input.form-control.value(type='text' placeholder='Name')
                 .input-group-btn
-                    a.btn.btn-success
+                    a.btn.btn-success.addQuery
                         .glyphicon.glyphicon-plus
-        input#query(type='hidden' name="query")
+        .form-group
+            label Oracle Text
+            .input-group(data-field='text' data-field-name='Oracle Text')
+                select.selectpicker.operator
+                    option(value='and') And
+                    option(value='or') Or
+                    option(value='not') Not
+                input.form-control.value(type='text' placeholder='Oracle text')
+                .input-group-btn
+                    a.btn.btn-success.addQuery
+                        .glyphicon.glyphicon-plus
+        .form-group
+            label Supertype
+            .input-group(data-field='Supertype' data-field-name='Supertype')
+                select.selectpicker.operator
+                    option(value='and') And
+                    option(value='or') Or
+                    option(value='not') Not
+                select.form-control.selectpicker.value(data-live-search='true')
+                    option(value=0)
+                    each supertype in supertypes
+                        option(value='#{supertype.supertypeid}') #{supertype.description}
+                .input-group-btn
+                    a.btn.btn-success.addQuery
+                        .glyphicon.glyphicon-plus
+    .col-md-6.col-xs-12
+        label(for='queryPreview') Query
+        pre#queryPreview
+        form(action='/results' method='post')
+            input#query(type='hidden' name='query' value='%7B%7D')
+            .form-group.btn-toolbar
+                button.btn.btn-primary(type='submit') Search
+                a.btn.btn-danger(type='submit' onclick='removeAllClauses();') Clear
+    script(type='text/javascript').
+        function getQueryJson() {
+            return JSON.parse(decodeURIComponent($('#query').val()));
+        }
 
-        p Plus should do the following
-        ul
-            li Add the contents to our hidden json value
-            li redraw query display using the hidden json value
-            li clear the value from the input where the plus was just clicked
-            li structure should be {'key1':{field:'',opperator:'',comparitor:'',value''}}
+        function setQueryJson(json) {
+            $('#query').val(encodeURIComponent(JSON.stringify(json)));
+            updateQueryPreview();
+        }
 
+        function addClause(event) {
+            console.log('event:', event);
+            console.log('this:', this);
+
+            var inputGroup = $(this).closest('.input-group');
+            var value = inputGroup.find('.value').not('div');
+
+            var clause = {
+                field: inputGroup.data('field'),
+                operator: inputGroup.find('.operator.selectpicker').val(),
+                comparator: inputGroup.find('.comparator.selectpicker').val(),
+                value: value.val()
+            };
+
+            value.val('');
+
+            var query = getQueryJson();
+
+            if (query === null || query === undefined || query === '')
+                query = {};
+
+            query[createGuid()] = clause;
+
+            setQueryJson(query);
+
+            console.log(query);
+        }
+
+        function removeClause(uuid) {
+            var query = getQueryJson();
+
+            if (query === null || query === undefined || query === '')
+                query = {};
+
+            if (query.hasOwnProperty(uuid)) {
+                delete query[uuid];
+            }
+
+            setQueryJson(query);
+        }
+
+        function removeAllClauses() {
+            setQueryJson({});
+        }
+
+        function updateQueryPreview() {
+            $('#queryPreview').text(JSON.stringify(getQueryJson(), null, 2));
+        }
+
+        $(document).ready(function () {
+            updateQueryPreview();
+
+            $('.addQuery').click(addClause);
+
+            $('.value').keyup(function (event) {
+                if (event.keyCode == 13) {
+                    $(this).closest('.input-group').find('.btn.btn-success.addQuery').click();
+                }
+            });
+
+        });

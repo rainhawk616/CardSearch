@@ -51,6 +51,10 @@ module.exports = function (sequelize, DataTypes) {
                             name: 'layoutid'
                         }
                     });
+                    Card.hasMany(models.CardSupertype, {
+                        foreignKey: 'cardid',
+                        constraints: true
+                    });
                 }
             },
             indexes: [

@@ -16,8 +16,21 @@ module.exports = {
     magicify: function (string) {
         if( string === null || string == undefined || string === '' || string.indexOf('{') === -1)
             return string;
-        return string.replace(/{(\w)}/g, function (fullReplace, capture) {
-            return '<div class="ms ms-cost ms-' + capture.toLowerCase() + ' "></div>';
+
+        return string.replace(/{([^{}]+)}/g, function (fullReplace, capture) {
+            var split=false;
+
+            capture = capture.toLowerCase();
+
+            if( capture === 't')
+                capture = 'tap';
+            else if( capture.indexOf('/') !== -1 ) {
+                capture = capture.replace('/', '');
+                split=true;
+            }
+            return '<div class="ms ms-cost ms-' + capture + ' '
+                + (split?' ms-split ':'')
+                + '"></div>';
         });
     }
 };

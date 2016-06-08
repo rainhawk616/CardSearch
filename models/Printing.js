@@ -61,6 +61,12 @@ module.exports = function (sequelize, DataTypes) {
             },
             source: {
                 type: Sequelize.STRING
+            },
+            starter: {
+                type: Sequelize.BOOLEAN
+            },
+            timeshifted: {
+                type: Sequelize.BOOLEAN
             }
         },
         {
@@ -79,6 +85,11 @@ module.exports = function (sequelize, DataTypes) {
                         foreignKey: {
                             name: 'rarityid',
                             allowNull: false
+                        }
+                    });
+                    Printing.belongsTo(models.Watermark, {
+                        foreignKey: {
+                            name: 'watermarkid'
                         }
                     });
                     Printing.belongsTo(models.Set, {
