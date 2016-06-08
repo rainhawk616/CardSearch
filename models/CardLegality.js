@@ -41,6 +41,7 @@ module.exports = function (sequelize, DataTypes) {
             },
             indexes: [
                 {
+                    unique: true,
                     fields: ['formatid','legalityid','cardid']
                 }
             ]

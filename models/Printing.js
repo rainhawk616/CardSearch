@@ -67,6 +67,11 @@ module.exports = function (sequelize, DataTypes) {
             },
             timeshifted: {
                 type: Sequelize.BOOLEAN
+            },
+            //TODO jsonb
+            foreignNames: {
+                field: "foreignnames",
+                type: Sequelize.JSON
             }
         },
         {
@@ -103,7 +108,11 @@ module.exports = function (sequelize, DataTypes) {
             indexes: [
                 {
                     fields: ['cardid', 'rarityid', 'setid']
-                }
+                },
+                // {
+                //     fields: ['foreignnames'],
+                //     //using: 'gin'
+                // }
             ]
         }
     );

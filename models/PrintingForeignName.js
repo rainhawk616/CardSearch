@@ -18,7 +18,7 @@ module.exports = function (sequelize, DataTypes) {
             }
         },
         {
-            tableName: 'printingforeignname',
+            tableName: 'printingforeignnames',
             timestamps: false,
             paranoid: false,
             classMethods: {

@@ -141,12 +141,16 @@ module.exports = {
     },
     search: function (req, res) {
         var supertypes = models.Supertype.findAll();
+        var types = models.Type.findAll();
+        var subtypes = models.Subtype.findAll();
 
-        Promise.all([supertypes])
-            .spread(function (supertypes) {
+        Promise.all([supertypes, types, subtypes])
+            .spread(function (supertypes, types, subtypes) {
                 res.render('search', {
                     title: 'Search',
-                    supertypes: supertypes
+                    supertypes: supertypes,
+                    types: types,
+                    subtypes: subtypes
                 });
             });
     },
@@ -162,6 +166,17 @@ module.exports = {
         var query = JSON.parse(decodeURIComponent(req.body.query));
 
         console.log('query:', query);
+
+        //TODO json test
+        // where = {
+        //     supertypes:{
+        //         $and: {
+        //             $and: [
+        //                 {$like: '\'Basic\''}
+        //             ]
+        //         }
+        //     }
+        // };
 
         for (var uuid in query) {
             var clause = query[uuid];
@@ -193,8 +208,8 @@ module.exports = {
             }
 
             /*
-            // Supertype
-            //  */
+             // Supertype
+             //  */
             // if( field === 'supertype') {
             //     if (operator === 'and') {
             //         andIn(supertypeWhere, 'supertypeid', value);
@@ -211,12 +226,26 @@ module.exports = {
         console.log('where:', JSON.stringify(where, null, 2));
 
         models.Card.findAll({
-            include: [{
-                model: models.CardSupertype,
-                include: [{
-                    model: models.Supertype
-                }]
-            }],
+            include: [
+                {
+                    model: models.CardSupertype,
+                    include: [{
+                        model: models.Supertype
+                    }]
+                },
+                {
+                    model: models.CardType,
+                    include: [{
+                        model: models.Type
+                    }]
+                },
+                {
+                    model: models.CardSubtype,
+                    include: [{
+                        model: models.Subtype
+                    }]
+                }
+            ],
             where: where
         }).then(function (results) {
             res.render('results', {
@@ -264,7 +293,7 @@ function like(where, operator, fieldName, value, not) {
     var innerOperator = outerAndOperator[operator];
 
     var clause = {};
-    clause[(not?'$notILike':'$iLike')] = '%' + value + '%';
+    clause[(not ? '$notILike' : '$iLike')] = '%' + value + '%';
 
     innerOperator.push(clause);
 }
@@ -304,7 +333,7 @@ function arrayIn(where, operator, fieldName, value, not) {
     }
     var innerOperator = outerAndOperator[operator];
 
-    var comparator = (not?'$notIn':'$in');
+    var comparator = (not ? '$notIn' : '$in');
     if (!innerOperator.hasOwnProperty(comparator)) {
         innerOperator[comparator] = [];
     }

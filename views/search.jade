@@ -39,6 +39,48 @@ block content
                 .input-group-btn
                     a.btn.btn-success.addQuery
                         .glyphicon.glyphicon-plus
+        .form-group
+            label Supertypeb
+            .input-group(data-field='supertypeb' data-field-name='Supertypeb')
+                select.selectpicker.operator
+                    option(value='and') And
+                    option(value='or') Or
+                    option(value='not') Not
+                select.form-control.selectpicker.value(data-live-search='true')
+                    option(value=0)
+                    each supertype in supertypes
+                        option #{supertype.description}
+                .input-group-btn
+                    a.btn.btn-success.addQuery
+                        .glyphicon.glyphicon-plus
+        .form-group
+            label Typeb
+            .input-group(data-field='typeb' data-field-name='Typeb')
+                select.selectpicker.operator
+                    option(value='and') And
+                    option(value='or') Or
+                    option(value='not') Not
+                select.form-control.selectpicker.value(data-live-search='true')
+                    option(value=0)
+                    each type in types
+                        option #{type.description}
+                .input-group-btn
+                    a.btn.btn-success.addQuery
+                        .glyphicon.glyphicon-plus
+        .form-group
+            label Subtypeb
+            .input-group(data-field='subtypeb' data-field-name='Subtypeb')
+                select.selectpicker.operator
+                    option(value='and') And
+                    option(value='or') Or
+                    option(value='not') Not
+                select.form-control.selectpicker.value(data-live-search='true')
+                    option(value=0)
+                    each subtype in subtypes
+                        option #{subtype.description}
+                .input-group-btn
+                    a.btn.btn-success.addQuery
+                        .glyphicon.glyphicon-plus
     .col-md-6.col-xs-12
         label(for='queryPreview') Query
         pre#queryPreview

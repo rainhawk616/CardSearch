@@ -4,9 +4,9 @@ var Sequelize = require('sequelize');
 var bcrypt = require('bcrypt');
 
 module.exports = function (sequelize, DataTypes) {
-    var PrintingName = sequelize.define("PrintingName",
+    var CardName = sequelize.define("CardName",
         {
-            printingnameid: {
+            cardnameid: {
                 type: Sequelize.INTEGER,
                 primaryKey: true,
                 autoIncrement: true,
@@ -18,14 +18,14 @@ module.exports = function (sequelize, DataTypes) {
             }
         },
         {
-            tableName: 'printingname',
+            tableName: 'cardnames',
             timestamps: false,
             paranoid: false,
             classMethods: {
                 associate: function (models) {
-                    PrintingName.belongsTo(models.Printing, {
+                    CardName.belongsTo(models.Card, {
                         foreignKey: {
-                            name: 'printingid',
+                            name: 'cardid',
                             allowNull: false
                         }
                     });
@@ -33,11 +33,11 @@ module.exports = function (sequelize, DataTypes) {
             },
             indexes: [
                 {
-                    fields: ['printingid']
+                    fields: ['cardid']
                 }
             ]
         }
     );
 
-    return PrintingName;
+    return CardName;
 };

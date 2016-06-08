@@ -38,6 +38,36 @@ module.exports = function (sequelize, DataTypes) {
             },
             loyalty: {
                 type: Sequelize.INTEGER
+            },
+            hand: {
+                type: Sequelize.INTEGER
+            },
+            life: {
+                type: Sequelize.INTEGER
+            }
+            //TODO test these jsonb fields in 9.4
+            ,
+            colorIdentity: {
+                field: "coloridentity",
+                type: Sequelize.JSON
+            },
+            legalities: {
+                type: Sequelize.JSON
+            },
+            printings: {
+                type: Sequelize.JSON
+            },
+            supertypes: {
+                type: Sequelize.JSON
+            },
+            types: {
+                type: Sequelize.JSON
+            },
+            subtypes: {
+                type: Sequelize.JSON
+            },
+            names: {
+                type: Sequelize.JSON
             }
         },
         {
@@ -55,12 +85,72 @@ module.exports = function (sequelize, DataTypes) {
                         foreignKey: 'cardid',
                         constraints: true
                     });
+                    Card.hasMany(models.CardType, {
+                        foreignKey: 'cardid',
+                        constraints: true
+                    });
+                    Card.hasMany(models.CardSubtype, {
+                        foreignKey: 'cardid',
+                        constraints: true
+                    });
+                    Card.hasMany(models.CardName, {
+                        foreignKey: 'cardid',
+                        constraints: true
+                    });
+                    Card.hasMany(models.CardColorIdentity, {
+                        foreignKey: 'cardid',
+                        constraints: true
+                    });
+                    Card.hasMany(models.CardLegality, {
+                        foreignKey: 'cardid',
+                        constraints: true
+                    });
+                    Card.hasMany(models.CardRuling, {
+                        foreignKey: 'cardid',
+                        constraints: true
+                    });
                 }
             },
             indexes: [
                 {
                     fields: ['name']
-                }
+                },
+                {
+                    fields: ['text']
+                },
+                //TODO test these jsonb fields in 9.4
+                // {
+                //     fields: ['coloridentity'],
+                //     using: 'gin'
+                // },
+                // {
+                //     fields: ['foreignnames'],
+                //     using: 'gin'
+                // },
+                // {
+                //     fields: ['legalities'],
+                //     using: 'gin'
+                // },
+                // {
+                //     fields: ['printings'],
+                //     using: 'gin'
+                // },
+                // {
+                //     fields: ['types'],
+                //     using: 'gin'
+                // },
+                // {
+                //     fields: ['supertypes'],
+                //     using: 'gin'
+                // },
+                // {
+                //     fields: ['subtypes'],
+                //     using: 'gin'
+                // },
+                // {
+                //     fields: ['names'],
+                //     using: 'gin'
+                // }
             ]
         }
     );

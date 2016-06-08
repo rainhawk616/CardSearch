@@ -71,11 +71,11 @@ table.set > tbody > tr > td {
 }
 
 .name {
-    white-space: nowrap;
+    white-space: pre-line;
 }
 
 .mana-cost {
-    white-space: nowrap;
+    white-space: pre-line;
 }
 
 .oracle-text {
