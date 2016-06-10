@@ -70,6 +70,10 @@ table.set > tbody > tr > td {
     cursor: pointer;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 .name {
     white-space: pre-line;
 }

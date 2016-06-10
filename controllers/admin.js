@@ -88,8 +88,9 @@ module.exports = {
         if (setJson.hasOwnProperty('LEA')) {
 
             var sequence = Promise.resolve();
+            var inserted = 0;
+            var existing = 0;
             var i = 0;
-            var d = 0;
 
             for (var setCode in setJson) {
                 if (setJson.hasOwnProperty(setCode)) {
@@ -100,16 +101,20 @@ module.exports = {
                             return findOrCreateSet(innerSet);
                         }).spread(function (resultSet, created) {
                             if (created)
-                                i++;
+                                inserted++;
                             else
-                                d++;
+                                existing++;
                         });
                     }(set));
+
+                    i++;
+                    if( i >= 5)
+                        break;
                 }
             }
 
             sequence.then(function (results) {
-                req.flash('success', {msg: i + ' sets created (' + d + ' duplicates'});
+                req.flash('success', {msg: inserted + ' sets created (' + existing + ') duplicates'});
                 req.session.save(function () {
                     res.redirect('/admin/sets');
                 });

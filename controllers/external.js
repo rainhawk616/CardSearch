@@ -237,26 +237,6 @@ module.exports = {
         console.log('where:', JSON.stringify(where, null, 2));
 
         models.Card.findAll({
-            // include: [
-            //     {
-            //         model: models.CardSupertype,
-            //         include: [{
-            //             model: models.Supertype
-            //         }]
-            //     },
-            //     {
-            //         model: models.CardType,
-            //         include: [{
-            //             model: models.Type
-            //         }]
-            //     },
-            //     {
-            //         model: models.CardSubtype,
-            //         include: [{
-            //             model: models.Subtype
-            //         }]
-            //     }
-            // ],
             where: where
         }).then(function (results) {
             res.render('results', {

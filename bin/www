@@ -27,7 +27,7 @@ var server = http.createServer(app);
  */
 
 //TODO syncing usful for testing
-models.sequelize.sync({logging: console.log, force: false}).then(function () {
+models.sequelize.sync({logging: console.log, force: process.env.FORCE === 'true'}).then(function () {
     server.listen(port);
     server.on('error', onError);
     server.on('listening', onListening);

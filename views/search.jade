@@ -149,7 +149,7 @@ block content
                 if (query.hasOwnProperty(uuid)) {
                     var clause = query[uuid];
 
-                    var kill = "<a class='glyphicon glyphicon-remove-sign' onclick='removeClause(\"" + uuid + "\")'></a>";
+                    var kill = "<a class='glyphicon glyphicon-remove-sign pointer' onclick='removeClause(\"" + uuid + "\")'></a>";
                     var field = clause.field.replace(/\w\S*/g, function (txt) {
                         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
                     });
