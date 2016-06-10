@@ -75,7 +75,7 @@ table.set > tbody > tr > td {
 }
 
 .mana-cost {
-    white-space: pre-line;
+    white-space: nowrap;
 }
 
 .oracle-text {

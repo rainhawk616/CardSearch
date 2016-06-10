@@ -167,13 +167,22 @@ module.exports = {
 
         console.log('query:', query);
 
-        //TODO json test
         // where = {
-        //     supertypes:{
-        //         $and: {
-        //             $and: [
-        //                 {$like: '\'Basic\''}
-        //             ]
+        //     "subtypes": {
+        //         "$and": {
+        //             "$contains": ['Human'],
+        //             "$or": [
+        //                 {"$contains": "Knight"},
+        //                 {"$contains": "Wizard"}
+        //             ],
+        //             "$and": {
+        //                 "$not": {
+        //                     "$or": [
+        //                         {"$contains": "Wizard"},
+        //                         {"$contains": "Soldier"}
+        //                     ]
+        //                 }
+        //             }
         //         }
         //     }
         // };
@@ -208,44 +217,46 @@ module.exports = {
             }
 
             /*
-             // Supertype
-             //  */
-            // if( field === 'supertype') {
-            //     if (operator === 'and') {
-            //         andIn(supertypeWhere, 'supertypeid', value);
-            //     }
-            //     else if (operator === 'or') {
-            //         orIn(supertypeWhere, 'supertypeid', value);
-            //     }
-            //     else if (operator === 'not') {
-            //         notIn(supertypeWhere, 'supertypeid', value);
-            //     }
-            // }
+             Supertype
+             */
+            if (field === 'supertypes'
+                || field === 'types'
+                || field === 'subtypes') {
+                if (operator === 'and') {
+                    andContains(where, field, value);
+                }
+                else if (operator === 'or') {
+                    orContains(where, field, value);
+                }
+                else if (operator === 'not') {
+                    notContains(where, field, value);
+                }
+            }
         }
 
         console.log('where:', JSON.stringify(where, null, 2));
 
         models.Card.findAll({
-            include: [
-                {
-                    model: models.CardSupertype,
-                    include: [{
-                        model: models.Supertype
-                    }]
-                },
-                {
-                    model: models.CardType,
-                    include: [{
-                        model: models.Type
-                    }]
-                },
-                {
-                    model: models.CardSubtype,
-                    include: [{
-                        model: models.Subtype
-                    }]
-                }
-            ],
+            // include: [
+            //     {
+            //         model: models.CardSupertype,
+            //         include: [{
+            //             model: models.Supertype
+            //         }]
+            //     },
+            //     {
+            //         model: models.CardType,
+            //         include: [{
+            //             model: models.Type
+            //         }]
+            //     },
+            //     {
+            //         model: models.CardSubtype,
+            //         include: [{
+            //             model: models.Subtype
+            //         }]
+            //     }
+            // ],
             where: where
         }).then(function (results) {
             res.render('results', {
@@ -298,29 +309,10 @@ function like(where, operator, fieldName, value, not) {
     innerOperator.push(clause);
 }
 
-function andIn(where, fieldName, value) {
-    arrayIn(where, '$and', fieldName, value);
-}
-
-function onIn(where, fieldName, value) {
-    arrayIn(where, '$or', fieldName, value);
-}
-
-function notIn(where, fieldName, value) {
-    arrayIn(where, '$and', fieldName, value, true);
-}
-
-function arrayIn(where, operator, fieldName, value, not) {
-    if (value === null || value === undefined || value === '')
-        return;
-
-    if (where === null || where === undefined)
-        throw new Error('test');
-
+function andContains(where, fieldName, value) {
     if (!where.hasOwnProperty(fieldName)) {
         where[fieldName] = {};
     }
-
     var field = where[fieldName];
 
     if (!field.hasOwnProperty('$and')) {
@@ -328,16 +320,47 @@ function arrayIn(where, operator, fieldName, value, not) {
     }
     var outerAndOperator = field['$and'];
 
-    if (!outerAndOperator.hasOwnProperty(operator)) {
-        outerAndOperator[operator] = {};
+    if (!outerAndOperator.hasOwnProperty('$contains')) {
+        outerAndOperator['$contains'] = [];
     }
-    var innerOperator = outerAndOperator[operator];
+    var contains = outerAndOperator['$contains'];
 
-    var comparator = (not ? '$notIn' : '$in');
-    if (!innerOperator.hasOwnProperty(comparator)) {
-        innerOperator[comparator] = [];
+    contains.push(value);
+}
+
+function orContains(where, fieldName, value) {
+    if (!where.hasOwnProperty(fieldName)) {
+        where[fieldName] = {};
     }
-    var oppList = innerOperator[comparator];
+    var field = where[fieldName];
 
-    oppList.push(value);
+    if (!field.hasOwnProperty('$and')) {
+        field['$and'] = {};
+    }
+    var outerAndOperator = field['$and'];
+
+    if (!outerAndOperator.hasOwnProperty('$or')) {
+        outerAndOperator['$or'] = [];
+    }
+    var or = outerAndOperator['$or'];
+
+    or.push({"$contains": value});
+}
+
+function notContains(where, fieldName, value) {
+    //TODO support this clause
+    // where = {
+    //     "subtypes": {
+    //         "$and": {
+    //             "$and":{
+    //                 "$not": {
+    //                     "$or": [
+    //                         {"$contains":"Wizard"},
+    //                         {"$contains":"Soldier"}
+    //                     ]
+    //                 }
+    //             }
+    //         }
+    //     }
+    // };
 }

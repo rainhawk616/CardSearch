@@ -49,25 +49,25 @@ module.exports = function (sequelize, DataTypes) {
             ,
             colorIdentity: {
                 field: "coloridentity",
-                type: Sequelize.JSON
+                type: Sequelize.JSONB
             },
             legalities: {
-                type: Sequelize.JSON
+                type: Sequelize.JSONB
             },
             printings: {
-                type: Sequelize.JSON
+                type: Sequelize.JSONB
             },
             supertypes: {
-                type: Sequelize.JSON
+                type: Sequelize.JSONB
             },
             types: {
-                type: Sequelize.JSON
+                type: Sequelize.JSONB
             },
             subtypes: {
-                type: Sequelize.JSON
+                type: Sequelize.JSONB
             },
             names: {
-                type: Sequelize.JSON
+                type: Sequelize.JSONB
             }
         },
         {
@@ -118,39 +118,34 @@ module.exports = function (sequelize, DataTypes) {
                 {
                     fields: ['text']
                 },
-                //TODO test these jsonb fields in 9.4
-                // {
-                //     fields: ['coloridentity'],
-                //     using: 'gin'
-                // },
-                // {
-                //     fields: ['foreignnames'],
-                //     using: 'gin'
-                // },
-                // {
-                //     fields: ['legalities'],
-                //     using: 'gin'
-                // },
-                // {
-                //     fields: ['printings'],
-                //     using: 'gin'
-                // },
-                // {
-                //     fields: ['types'],
-                //     using: 'gin'
-                // },
-                // {
-                //     fields: ['supertypes'],
-                //     using: 'gin'
-                // },
-                // {
-                //     fields: ['subtypes'],
-                //     using: 'gin'
-                // },
-                // {
-                //     fields: ['names'],
-                //     using: 'gin'
-                // }
+                {
+                    fields: ['coloridentity'],
+                    using: 'gin'
+                },
+                {
+                    fields: ['legalities'],
+                    using: 'gin'
+                },
+                {
+                    fields: ['printings'],
+                    using: 'gin'
+                },
+                {
+                    fields: ['types'],
+                    using: 'gin'
+                },
+                {
+                    fields: ['supertypes'],
+                    using: 'gin'
+                },
+                {
+                    fields: ['subtypes'],
+                    using: 'gin'
+                },
+                {
+                    fields: ['names'],
+                    using: 'gin'
+                }
             ]
         }
     );

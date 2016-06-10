@@ -27,64 +27,52 @@ block content
                         .glyphicon.glyphicon-plus
         .form-group
             label Supertype
-            .input-group(data-field='Supertype' data-field-name='Supertype')
+            .input-group(data-field='supertypes' data-field-name='Supertype')
                 select.selectpicker.operator
                     option(value='and') And
                     option(value='or') Or
                     option(value='not') Not
-                select.form-control.selectpicker.value(data-live-search='true')
-                    option(value=0)
-                    each supertype in supertypes
-                        option(value='#{supertype.supertypeid}') #{supertype.description}
-                .input-group-btn
-                    a.btn.btn-success.addQuery
-                        .glyphicon.glyphicon-plus
-        .form-group
-            label Supertypeb
-            .input-group(data-field='supertypeb' data-field-name='Supertypeb')
-                select.selectpicker.operator
-                    option(value='and') And
-                    option(value='or') Or
-                    option(value='not') Not
-                select.form-control.selectpicker.value(data-live-search='true')
-                    option(value=0)
+                select.form-control.selectpicker.value#supertype(data-live-search='true' data-none-selected-text='Supertype')
+                    option(value='')
                     each supertype in supertypes
                         option #{supertype.description}
                 .input-group-btn
                     a.btn.btn-success.addQuery
                         .glyphicon.glyphicon-plus
         .form-group
-            label Typeb
-            .input-group(data-field='typeb' data-field-name='Typeb')
+            label Type
+            .input-group(data-field='types' data-field-name='Type')
                 select.selectpicker.operator
                     option(value='and') And
                     option(value='or') Or
                     option(value='not') Not
-                select.form-control.selectpicker.value(data-live-search='true')
-                    option(value=0)
+                select.form-control.selectpicker.value#type(data-live-search='true' data-none-selected-text='Type')
+                    option(value='')
                     each type in types
                         option #{type.description}
                 .input-group-btn
                     a.btn.btn-success.addQuery
                         .glyphicon.glyphicon-plus
         .form-group
-            label Subtypeb
-            .input-group(data-field='subtypeb' data-field-name='Subtypeb')
+            label Subtype
+            .input-group(data-field='subtypes' data-field-name='Subtype')
                 select.selectpicker.operator
                     option(value='and') And
                     option(value='or') Or
                     option(value='not') Not
-                select.form-control.selectpicker.value(data-live-search='true')
-                    option(value=0)
+                select.form-control.selectpicker.value#subtype(data-live-search='true' data-none-selected-text='Subtype')
+                    option(value='')
                     each subtype in subtypes
                         option #{subtype.description}
                 .input-group-btn
                     a.btn.btn-success.addQuery
                         .glyphicon.glyphicon-plus
     .col-md-6.col-xs-12
-        label(for='queryPreview') Query
-        pre#queryPreview
-        form(action='/results' method='post')
+        //label(for='queryPreview') Query
+        //pre#queryPreview
+        label(for='queryPreview2') Query 2.0
+        div#queryPreview2
+        form#form(action='/results' method='post')
             input#query(type='hidden' name='query' value='%7B%7D')
             .form-group.btn-toolbar
                 button.btn.btn-primary(type='submit') Search
@@ -106,6 +94,9 @@ block content
             var inputGroup = $(this).closest('.input-group');
             var value = inputGroup.find('.value').not('div');
 
+            if (value.val() === undefined || value.val() === null || value.val() === '')
+                return;
+
             var clause = {
                 field: inputGroup.data('field'),
                 operator: inputGroup.find('.operator.selectpicker').val(),
@@ -114,6 +105,7 @@ block content
             };
 
             value.val('');
+            inputGroup.find('.selectpicker.value').selectpicker('val', null);
 
             var query = getQueryJson();
 
@@ -146,17 +138,46 @@ block content
 
         function updateQueryPreview() {
             $('#queryPreview').text(JSON.stringify(getQueryJson(), null, 2));
+
+            var query = getQueryJson();
+
+            var queryPreview = $('#queryPreview2');
+
+            queryPreview.empty();
+
+            for (var uuid in query) {
+                if (query.hasOwnProperty(uuid)) {
+                    var clause = query[uuid];
+
+                    var kill = "<a class='glyphicon glyphicon-remove-sign' onclick='removeClause(\"" + uuid + "\")'></a>";
+                    var field = clause.field.replace(/\w\S*/g, function (txt) {
+                        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                    });
+                    var operator = clause.operator.toUpperCase();
+                    var value = clause.value;
+                    var child = '<div class="form-group">' + kill + ' ' + field + ' ' + operator + ' \'' + value + '\'</div>'
+
+                    queryPreview.append(child);
+
+                }
+            }
         }
+
 
         $(document).ready(function () {
             updateQueryPreview();
 
             $('.addQuery').click(addClause);
 
+
             $('.value').keyup(function (event) {
                 if (event.keyCode == 13) {
                     $(this).closest('.input-group').find('.btn.btn-success.addQuery').click();
                 }
+            });
+
+            $("#form").submit(function (event) {
+                $('.addQuery').click();
             });
 
         });

@@ -71,7 +71,7 @@ module.exports = function (sequelize, DataTypes) {
             //TODO jsonb
             foreignNames: {
                 field: "foreignnames",
-                type: Sequelize.JSON
+                type: Sequelize.JSONB
             }
         },
         {
@@ -109,10 +109,10 @@ module.exports = function (sequelize, DataTypes) {
                 {
                     fields: ['cardid', 'rarityid', 'setid']
                 },
-                // {
-                //     fields: ['foreignnames'],
-                //     //using: 'gin'
-                // }
+                {
+                    fields: ['foreignnames'],
+                    using: 'gin'
+                }
             ]
         }
     );
