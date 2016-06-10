@@ -163,14 +163,6 @@ module.exports = function (sequelize, DataTypes) {
                     using: 'gin'
                 },
                 {
-                    fields: ['subtypes'],
-                    using: 'gin'
-                },
-                {
-                    fields: ['subtypes'],
-                    using: 'gin'
-                },
-                {
                     fields: ['names'],
                     using: 'gin'
                 }

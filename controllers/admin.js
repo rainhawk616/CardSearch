@@ -106,13 +106,18 @@ module.exports = {
                             }
                             else {
                                 skipped++;
+                                return [null, null];
                             }
                         }).spread(function (resultSet, created) {
-                            resultSet=null;
-                            if (created)
+                            if(created === null) {
+
+                            }
+                            else if (created) {
                                 inserted++;
-                            else
+                            }
+                            else {
                                 existing++;
+                            }
                         });
                     }(set));
                 }
