@@ -67,6 +67,33 @@ block content
                 .input-group-btn
                     a.btn.btn-success.addQuery
                         .glyphicon.glyphicon-plus
+        .form-group
+            label Colors (not implemented)
+            .input-group(data-field='colors' data-field-name='Colors')
+                select.selectpicker.operator
+                    option(value='and') And
+                    option(value='or') Or
+                    option(value='not') Not
+                div(style='border: 1px solid #ccc;height:34px;display:flex;justify-content:space-around')
+                    span
+                        input.ms#red(type='checkbox' autocomplete='off' name='red')
+                        label.ms.ms-cost.ms-r.ms-2x(for='red')
+                    span
+                        input.ms#white(type='checkbox' autocomplete='off')
+                        label.ms.ms-cost.ms-w.ms-2x(for='white')
+                    span
+                        input.ms#green(type='checkbox' autocomplete='off')
+                        label.ms.ms-cost.ms-g.ms-2x(for='green')
+                    span
+                        input.ms#black(type='checkbox' autocomplete='off')
+                        label.ms.ms-cost.ms-b.ms-2x(for='black')
+                    span
+                        input.ms#blue(type='checkbox' autocomplete='off')
+                        label.ms.ms-cost.ms-u.ms-2x(for='blue')
+                .input-group-btn
+                    a.btn.btn-success.addQuery
+                        .glyphicon.glyphicon-plus
+
     .col-md-6.col-xs-12
         //label(for='queryPreview') Query
         //pre#queryPreview
