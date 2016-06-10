@@ -1,4 +1,3 @@
-/uploads/*
 /.env
 /views/*.html
 .idea

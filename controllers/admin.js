@@ -3,7 +3,7 @@ var sequelize = require('../models/index').sequelize;
 var Sequelize = require('../models/index').Sequelize;
 var Promise = require("bluebird");
 var multer = require('multer');
-var upload = multer({dest: '../uploads/'});
+var upload = multer({dest: '../tmp/'});
 var fs = require('fs');
 
 module.exports = {
