@@ -17,18 +17,18 @@ module.exports = {
         app.get('/admin/set/:setid', this.set);
 
     },
-    authorize: function (req, res, next) {
+    authorize: function (req, res) {
         if (req.isAuthenticated() && req.user.admin) {
             return next();
         }
         res.redirect('/login');
     },
-    home: function (req, res, next) {
+    home: function (req, res) {
         res.render('admin/dashboard', {
             title: 'Dashboard'
         });
     },
-    sets: function (req, res, next) {
+    sets: function (req, res) {
         models.Set.findAll({
             order: [
                 ['releasedate', 'ASC']
@@ -40,7 +40,7 @@ module.exports = {
             });
         });
     },
-    set: function (req, res, next) {
+    set: function (req, res) {
         models.Set.findById(req.params.setid, {
             include: [
                 {
@@ -76,12 +76,12 @@ module.exports = {
             }
         });
     },
-    getSetImport: function (req, res, next) {
+    getSetImport: function (req, res) {
         res.render('admin/setimport', {
             title: 'Set Import'
         });
     },
-    postSetImport: function (req, res, next) {
+    postSetImport: function (req, res) {
         var content = fs.readFileSync(req.file.path);
         var setJson = JSON.parse(content);
 
@@ -90,31 +90,36 @@ module.exports = {
             var sequence = Promise.resolve();
             var inserted = 0;
             var existing = 0;
-            var i = 0;
+            var skipped = 0;
+            var maxSetUpload = parseInt(process.env.MAX_SET_UPLOAD);
+            if( isNaN(maxSetUpload) )
+                maxSetUpload = 5;
 
             for (var setCode in setJson) {
                 if (setJson.hasOwnProperty(setCode)) {
                     var set = setJson[setCode];
                     (function (innerSet) {
                         sequence = sequence.then(function () {
-                            console.log('importing ' + innerSet.code);
-                            return findOrCreateSet(innerSet);
+                            if (inserted <= maxSetUpload) {
+                                console.log('importing ' + innerSet.code);
+                                return findOrCreateSet(innerSet);
+                            }
+                            else {
+                                skipped++;
+                            }
                         }).spread(function (resultSet, created) {
+                            resultSet=null;
                             if (created)
                                 inserted++;
                             else
                                 existing++;
                         });
                     }(set));
-
-                    i++;
-                    if( i >= 5)
-                        break;
                 }
             }
 
             sequence.then(function (results) {
-                req.flash('success', {msg: inserted + ' sets created (' + existing + ') duplicates'});
+                req.flash('success', {msg: inserted + ' sets created (' + existing + ' duplicates, ' + skipped + ' skipped) '});
                 req.session.save(function () {
                     res.redirect('/admin/sets');
                 });
@@ -218,8 +223,8 @@ function findOrCreateSet(setJson, success, error) {
                 && setField !== 'mkm_id'
                 && setField !== 'cards'
                 && setField !== 'block'
-                && setField !== 'translations' //TODO set translations not implemented
-                && setField !== 'magicRaritiesCodes' //TODO set magicRaritiesCodes not implemented
+                && setField !== 'translations'
+                && setField !== 'magicRaritiesCodes'
                 && setField !== 'oldCode'
                 && setField !== 'onlineOnly'
             ) {
@@ -425,7 +430,9 @@ function findOrCreateSet(setJson, success, error) {
                             mkm_id: setJson.mkm_id,
                             starter: setJson.starter,
                             oldcode: setJson.oldCode,
-                            onlineOnly: setJson.onlineOnly
+                            onlineOnly: setJson.onlineOnly,
+                            magicRaritiesCodes: setJson.magicRaritiesCodes,
+                            translations: setJson.translations
                         });
 
                         newSet.setBorder(border, {save: false});
@@ -467,10 +474,11 @@ function findOrCreateCard(transaction, set, cardJson, layoutMap, colorIdentityMa
             loyalty: cardJson.loyalty,
             hand: cardJson.hand,
             life: cardJson.life,
-//TODO jsonb
             colorIdentity: cardJson.colorIdentity,
+            colors: cardJson.colors,
             legalities: cardJson.legalities,
             printings: cardJson.printings,
+            rulings: cardJson.rulings,
             supertypes: cardJson.supertypes,
             types: cardJson.types,
             subtypes: cardJson.subtypes,
@@ -632,10 +640,10 @@ function findOrCreateCard(transaction, set, cardJson, layoutMap, colorIdentityMa
         }
         else {
             /*
-            The card already exists but we should update the printings just in case the card got a new one
+             The card already exists but we should update the printings just in case the card got a new one
              */
             card.printings = cardJson.printings;
-            promises.push(card.save({transaction:transaction}));
+            promises.push(card.save({transaction: transaction}));
         }
 
         return Promise.all(promises);
@@ -655,7 +663,6 @@ function findOrCreateCard(transaction, set, cardJson, layoutMap, colorIdentityMa
             border: cardJson.border,
             source: cardJson.source,
             timeshifted: cardJson.timeshifted,
-            //TODO jsonb
             foreignNames: cardJson.foreignNames
         });
 

@@ -44,29 +44,41 @@ module.exports = function (sequelize, DataTypes) {
             },
             life: {
                 type: Sequelize.INTEGER
-            }
-            //TODO test these jsonb fields in 9.4
-            ,
+            },
             colorIdentity: {
                 field: "coloridentity",
                 type: Sequelize.JSONB
             },
+            colors: {
+                field: "colors",
+                type: Sequelize.JSONB
+            },
             legalities: {
+                field: "legalities",
                 type: Sequelize.JSONB
             },
             printings: {
+                field: "printings",
+                type: Sequelize.JSONB
+            },
+            rulings: {
+                field: "rulings",
                 type: Sequelize.JSONB
             },
             supertypes: {
+                field: "supertypes",
                 type: Sequelize.JSONB
             },
             types: {
+                field: "types",
                 type: Sequelize.JSONB
             },
             subtypes: {
+                field: "subtypes",
                 type: Sequelize.JSONB
             },
             names: {
+                field: "names",
                 type: Sequelize.JSONB
             }
         },
@@ -123,6 +135,10 @@ module.exports = function (sequelize, DataTypes) {
                     using: 'gin'
                 },
                 {
+                    fields: ['colors'],
+                    using: 'gin'
+                },
+                {
                     fields: ['legalities'],
                     using: 'gin'
                 },
@@ -131,11 +147,23 @@ module.exports = function (sequelize, DataTypes) {
                     using: 'gin'
                 },
                 {
-                    fields: ['types'],
+                    fields: ['rulings'],
                     using: 'gin'
                 },
                 {
                     fields: ['supertypes'],
+                    using: 'gin'
+                },
+                {
+                    fields: ['types'],
+                    using: 'gin'
+                },
+                {
+                    fields: ['subtypes'],
+                    using: 'gin'
+                },
+                {
+                    fields: ['subtypes'],
                     using: 'gin'
                 },
                 {

@@ -48,6 +48,14 @@ module.exports = function (sequelize) {
                 field: "oldcode",
                 type: Sequelize.STRING,
                 unique: true
+            },
+            magicRaritiesCodes: {
+                field: "magicraritiescodes",
+                type: Sequelize.JSONB
+            },
+            translations: {
+                field: "translations",
+                type: Sequelize.JSONB
             }
         },
         {
@@ -82,6 +90,14 @@ module.exports = function (sequelize) {
             indexes: [
                 {
                     fields: ['borderid', 'settypeid', 'blockid']
+                },
+                {
+                    fields: ['magicraritiescodes'],
+                    using: 'gin'
+                },
+                {
+                    fields: ['translations'],
+                    using: 'gin'
                 }
             ]
         }

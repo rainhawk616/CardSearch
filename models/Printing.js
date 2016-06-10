@@ -68,7 +68,6 @@ module.exports = function (sequelize, DataTypes) {
             timeshifted: {
                 type: Sequelize.BOOLEAN
             },
-            //TODO jsonb
             foreignNames: {
                 field: "foreignnames",
                 type: Sequelize.JSONB
