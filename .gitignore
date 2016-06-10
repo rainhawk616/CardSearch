@@ -4,3 +4,4 @@
 /constants.js
 /node_modules
 /sessions
+/tmp/*
