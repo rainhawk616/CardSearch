@@ -93,6 +93,68 @@ block content
                 .input-group-btn
                     a.btn.btn-success.addQuery
                         .glyphicon.glyphicon-plus
+        .form-group
+            label Colors (not implemented)
+            .input-group(data-field='colors' data-field-name='Colors')
+                table
+                    tbody
+                        tr
+                            td
+                                p Must have
+                            td
+                                input.ms#must-red(type='radio' autocomplete='off' name='red')
+                                label.ms.ms-cost.ms-r.ms-2x(for='must-red')
+                            td
+                                input.ms#must-white(type='radio' autocomplete='off' name='white')
+                                label.ms.ms-cost.ms-w.ms-2x(for='must-white')
+                            td
+                                input.ms#must-green(type='radio' autocomplete='off' name='green')
+                                label.ms.ms-cost.ms-g.ms-2x(for='must-green')
+                            td
+                                input.ms#must-black(type='radio' autocomplete='off' name='black')
+                                label.ms.ms-cost.ms-b.ms-2x(for='must-black')
+                            td
+                                input.ms#must-blue(type='radio' autocomplete='off' name='blue')
+                                label.ms.ms-cost.ms-u.ms-2x(for='must-blue')
+                        tr
+                            td
+                                p Playable in
+                            td
+                                input.ms#playable-red(type='radio' autocomplete='off' name='red' checked)
+                                label.ms.ms-cost.ms-r.ms-2x(for='playable-red')
+                            td
+                                input.ms#playable-white(type='radio' autocomplete='off' name='white' checked)
+                                label.ms.ms-cost.ms-w.ms-2x(for='playable-white')
+                            td
+                                input.ms#playable-green(type='radio' autocomplete='off' name='green' checked)
+                                label.ms.ms-cost.ms-g.ms-2x(for='playable-green')
+                            td
+                                input.ms#playable-black(type='radio' autocomplete='off' name='black' checked)
+                                label.ms.ms-cost.ms-b.ms-2x(for='playable-black')
+                            td
+                                input.ms#playable-blue(type='radio' autocomplete='off' name='blue' checked)
+                                label.ms.ms-cost.ms-u.ms-2x(for='playable-blue')
+                        tr
+                            td
+                                p Exclude
+                            td
+                                input.ms#exclude-red(type='radio' autocomplete='off' name='red')
+                                label.ms.ms-cost.ms-r.ms-2x(for='exclude-red')
+                            td
+                                input.ms#exclude-white(type='radio' autocomplete='off' name='white')
+                                label.ms.ms-cost.ms-w.ms-2x(for='exclude-white')
+                            td
+                                input.ms#exclude-green(type='radio' autocomplete='off' name='green')
+                                label.ms.ms-cost.ms-g.ms-2x(for='exclude-green')
+                            td
+                                input.ms#exclude-black(type='radio' autocomplete='off' name='black')
+                                label.ms.ms-cost.ms-b.ms-2x(for='exclude-black')
+                            td
+                                input.ms#exclude-blue(type='radio' autocomplete='off' name='blue')
+                                label.ms.ms-cost.ms-u.ms-2x(for='exclude-blue')
+                .input-group-btn
+                    a.btn.btn-success.addQuery
+                        .glyphicon.glyphicon-plus
 
     .col-md-4.col-xs-12
         //label(for='queryPreview') Query
