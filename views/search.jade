@@ -68,6 +68,21 @@ block content
                     a.btn.btn-success.addQuery
                         .glyphicon.glyphicon-plus
         .form-group
+            label Order
+            .input-group(data-field='order' data-field-name='Order')
+                select.selectpicker.operator
+                    option(value='ascending') Ascending
+                    option(value='descending') Descending
+                select.form-control.selectpicker.value#order(data-live-search='true' data-none-selected-text='Order')
+                    option(value='')
+                    option(value='Name') Name
+                    option(value='CMC') CMC
+                    option(value='Power') Power
+                    option(value='Toughness') Toughness
+                .input-group-btn
+                    a.btn.btn-success.addQuery
+                        .glyphicon.glyphicon-plus
+        .form-group
             label Colors (not implemented)
             .input-group(data-field='colors' data-field-name='Colors')
                 select.selectpicker.operator

@@ -123,6 +123,43 @@ module.exports = function (sequelize, DataTypes) {
                     });
                 }
             },
+            getterMethods: {
+                formattedType: function () {
+                    var i = 0;
+                    var formattedType = '';
+
+                    if (this.supertypes !== null) {
+                        for (i = 0; i < this.supertypes.length; i++) {
+                            if (formattedType !== '')
+                                formattedType += ' ';
+                            formattedType += this.supertypes[i];
+                        }
+                    }
+
+                    if (this.types !== null) {
+                        for (i = 0; i < this.types.length; i++) {
+                            if (formattedType !== '')
+                                formattedType += ' ';
+                            formattedType += this.types[i];
+                        }
+                    }
+                    
+                    if (this.subtypes !== null) {
+
+                        if (formattedType !== '') {
+                            formattedType += ' - ';
+                        }
+
+                        for (i = 0; i < this.subtypes.length; i++) {
+                            if (formattedType !== '')
+                                formattedType += ' ';
+                            formattedType += this.subtypes[i];
+                        }
+                    }
+
+                    return formattedType;
+                }
+            },
             indexes: [
                 {
                     fields: ['name']

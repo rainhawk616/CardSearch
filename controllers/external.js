@@ -162,32 +162,12 @@ module.exports = {
         console.log("body:", req.body);
 
         var where = {};
+        var order = [];
         var supertypeWhere = {};
         var i = 0;
         var query = JSON.parse(decodeURIComponent(req.body.query));
 
         console.log('query:', query);
-        where = {};
-
-        // where = {
-        //     "subtypes": {
-        //         "$and": {
-        //             "$contains": ['Human'],
-        //             "$or": [
-        //                 {"$contains": "Knight"},
-        //                 {"$contains": "Wizard"}
-        //             ],
-        //             "$and": {
-        //                 "$not": {
-        //                     "$or": [
-        //                         {"$contains": "Wizard"},
-        //                         {"$contains": "Soldier"}
-        //                     ]
-        //                 }
-        //             }
-        //         }
-        //     }
-        // };
 
         for (var uuid in query) {
             var clause = query[uuid];
@@ -195,12 +175,6 @@ module.exports = {
             var operator = clause['operator'];
             var comparator = clause['comparator'];
             var value = clause['value'];
-
-            //TODO should we still do the split?
-            // var values = value.split(' ');
-            // for (i = 0; i < values.length; i++) {
-            //     andLike(where, 'name', values[i]);
-            // }
 
             /*
              Like fields
@@ -234,17 +208,39 @@ module.exports = {
                     notContains(where, field, value);
                 }
             }
+
+            /*
+             Ordering
+             */
+            if (field === 'order') {
+                if (operator === 'ascending') {
+                    order.push([value.toLowerCase(), 'ASC']);
+                }
+                else if (operator === 'descending') {
+                    order.push([value.toLowerCase(), 'DESC']);
+                }
+            }
+        }
+
+        /*
+         Add default ordering
+         */
+        if (order.length === 0) {
+            order.push(['name', 'asc']);
         }
 
         console.log('where:', JSON.stringify(where, null, 2));
+        console.log('order:', JSON.stringify(order, null, 2));
 
         models.Card.findAll({
-            where: where
+            where: where,
+            order: order
         }).then(function (results) {
             res.render('results', {
                 title: 'Results',
                 results: results,
-                query: where
+                where: where,
+                order: order
             });
         });
     }

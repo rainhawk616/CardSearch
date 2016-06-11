@@ -3,20 +3,29 @@ extends layout
 block content
     h1=title
     label(for'query') Query
-    pre#query=JSON.stringify(query, null, 2)
+    pre#query=JSON.stringify({where: where, order: order}, null, 2)
     if results.length > 0
         a.btn.btn-default(onclick="back()") Back
         table.table
             thead
                 tr
+                    th image
                     th Name
                     th Mana Cost
+                    th Type
+                    th Power
+                    th Toughness
                     th Oracle Text
             tbody
                 each card in results
                     tr
+                        td.image
+                            img.image
                         td.name #{card.name}
                         td.mana-cost !{utils.magicify(card.manaCost)}
+                        td.type #{card.formattedType}
+                        td.power #{card.power}
+                        td.toughness #{card.toughness}
                         td.oracle-text !{utils.magicify(card.text)}
     else
         p No matching results found. Try searching again with different or fewer parameters.

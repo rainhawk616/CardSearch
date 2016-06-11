@@ -132,5 +132,11 @@ input[type=checkbox].ms:checked + label.ms-u, input[type=radio].ms:checked + lab
     color: #111;
 }
 
+.image {
+    width: 95px;
+    height: 132px;
+    -webkit-border-radius: 6px;
+}
+
 
 
