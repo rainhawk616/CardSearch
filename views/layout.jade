@@ -18,11 +18,9 @@ html(lang='en')
                         li(class=(title == 'About') ? 'active' : undefined)
                             a(href='/about') About
         .container
-            .row
-                .col-xs-10.col-xs-offset-1
-                    div.row
-                        include partials/flash
-                    div.row
-                        block content
+            div.row
+                include partials/flash
+            div.row
+                block content
 
         include partials/footer

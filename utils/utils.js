@@ -24,6 +24,8 @@ module.exports = {
 
             if( capture === 't')
                 capture = 'tap';
+            else if (capture === '∞')
+                capture = 'infinity';
             else if( capture.indexOf('/') !== -1 ) {
                 capture = capture.replace('/', '');
                 split=true;

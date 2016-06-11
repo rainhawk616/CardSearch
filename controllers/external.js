@@ -1,5 +1,6 @@
 var models = require('../models');
 //var express = require('express');
+var sequelize = require('../models/index').sequelize;
 var passport = require('passport');
 var Promise = require("bluebird");
 
@@ -166,6 +167,7 @@ module.exports = {
         var query = JSON.parse(decodeURIComponent(req.body.query));
 
         console.log('query:', query);
+        where = {};
 
         // where = {
         //     "subtypes": {
@@ -328,19 +330,21 @@ function orContains(where, fieldName, value) {
 }
 
 function notContains(where, fieldName, value) {
-    //TODO support this clause
-    // where = {
-    //     "subtypes": {
-    //         "$and": {
-    //             "$and":{
-    //                 "$not": {
-    //                     "$or": [
-    //                         {"$contains":"Wizard"},
-    //                         {"$contains":"Soldier"}
-    //                     ]
-    //                 }
-    //             }
-    //         }
-    //     }
-    // };
+    if (!where.hasOwnProperty(fieldName)) {
+        where[fieldName] = {};
+    }
+    var field = where[fieldName];
+
+    if (!field.hasOwnProperty('$and')) {
+        field['$and'] = {};
+    }
+    var outerAndOperator = field['$and'];
+
+    if (!outerAndOperator.hasOwnProperty('$and')) {
+        outerAndOperator['$and'] = [];
+    }
+    var and = outerAndOperator['$and'];
+
+    //'(NOT "Card"."'+fieldName+'" @>  \'["' + value + '"]\') or ("Card"."'+fieldName+'" @>  \'["' + value + '"]\' is unknown)'
+    and.push(sequelize.literal('(NOT "Card"."' + fieldName + '" @>  \'["' + value + '"]\') or ("Card"."' + fieldName + '" @>  \'["' + value + '"]\' is unknown)'));
 }
