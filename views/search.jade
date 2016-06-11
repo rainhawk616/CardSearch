@@ -124,22 +124,36 @@ block content
             if (value.val() === undefined || value.val() === null || value.val() === '')
                 return;
 
-            var clause = {
-                field: inputGroup.data('field'),
-                operator: inputGroup.find('.operator.selectpicker').val(),
-                comparator: inputGroup.find('.comparator.selectpicker').val(),
-                value: value.val()
-            };
-
+            var string = value.val();
             value.val('');
             inputGroup.find('.selectpicker.value').selectpicker('val', null);
 
-            var query = getQueryJson();
+            var values = [];
+            var quotedText = /["|']([^"']+)["|']/g;
+            var match = quotedText.exec(string);
 
+            while (match != null) {
+                values.push(match[1]);
+                match = quotedText.exec(string);
+            }
+
+            values = values.concat(string.replace(quotedText, '').split(' '));
+
+            var query = getQueryJson();
             if (query === null || query === undefined || query === '')
                 query = {};
 
-            query[createGuid()] = clause;
+            for (var i = 0; i < values.length; i++) {
+                var val = values[i];
+                if (val === undefined || val === null || val === '')
+                    continue;
+                query[createGuid()] = {
+                    field: inputGroup.data('field'),
+                    operator: inputGroup.find('.operator.selectpicker').val(),
+                    comparator: inputGroup.find('.comparator.selectpicker').val(),
+                    value: val
+                };
+            }
 
             setQueryJson(query);
 
