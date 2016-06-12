@@ -158,18 +158,24 @@ module.exports = {
             });
     },
     getResults: function (req, res) {
-        console.log("req.cookies:", JSON.stringify(req.cookies, null, 2));
+        if (req.cookies.query === null || req.cookies.query === undefined) {
+            req.flash('errors', {msg: 'Dack Faden stole all your cookies!'});
+            req.session.save(function () {
+                res.redirect('/search');
+            });
+            return;
+        }
 
         var where = {};
         var order = [];
         var i = 0;
+
         var query = JSON.parse(req.cookies.query);
         var page = parseInt(req.query.page);
         if (isNaN(page))
             page = 1;
         var limit = 50;
         var offset = (page - 1) * limit;
-        ;
 
         for (var key in query) {
             if (query.hasOwnProperty(key)) {
