@@ -19,12 +19,14 @@ module.exports = {
         app.get('/results', this.getResults);
     },
     index: function (req, res) {
-        models.User.findAll().then(function (users) {
-            res.render('index', {
-                title: 'Index',
-                users: users
-            });
-        });
+        // models.User.findAll().then(function (users) {
+        //     res.render('index', {
+        //         title: 'Index',
+        //         users: users
+        //     });
+        // });
+
+        res.redirect('/search');
     },
     about: function (req, res) {
         res.render('about', {title: 'About'});
