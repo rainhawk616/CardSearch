@@ -11,6 +11,7 @@ block content
                     th Name
                     th Code
                     th Release Date
+                    th Cards
                     th
             tbody
                 each set in sets
@@ -20,6 +21,8 @@ block content
                         td #{set.name}
                         td #{set.code}
                         td #{set.releaseDate}
+                        td
+                            p / #{set.numberOfCards}
                         td
                             a(href="/admin/set/#{set.setid}")
                                 .glyphicon.glyphicon-edit

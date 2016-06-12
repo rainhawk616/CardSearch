@@ -3,6 +3,7 @@ var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var passport = require('passport');
 var Promise = require("bluebird");
+var cookieParser = require('cookie-parser');
 
 module.exports = {
     registerRoutes: function (app) {
@@ -16,7 +17,6 @@ module.exports = {
         app.get('/logout', this.logout);
         app.get('/search', this.search);
         app.get('/results', this.getResults);
-        app.post('/results', this.postResults);
     },
     index: function (req, res) {
         models.User.findAll().then(function (users) {
@@ -156,80 +156,77 @@ module.exports = {
             });
     },
     getResults: function (req, res) {
-        res.redirect('/search');
-    },
-    postResults: function (req, res) {
-        console.log("body:", req.body);
+        console.log("req.cookies:", JSON.stringify(req.cookies, null, 2));
 
         var where = {};
         var order = [];
         var supertypeWhere = {};
         var i = 0;
-        var query = JSON.parse(decodeURIComponent(req.body.query));
+        var query = JSON.parse(req.cookies.query);
 
-        console.log('query:', query);
+        for (var key in query) {
+            if (query.hasOwnProperty(key)) {
+                var clause = query[key];
+                var field = clause['field'].toLowerCase();
+                var operator = clause['operator'];
+                var comparator = clause['comparator'];
+                var value = clause['value'];
 
-        for (var uuid in query) {
-            var clause = query[uuid];
-            var field = clause['field'].toLowerCase();
-            var operator = clause['operator'];
-            var comparator = clause['comparator'];
-            var value = clause['value'];
+                /*
+                 Like fields
+                 */
+                if (field === 'name'
+                    || field === 'text') {
+                    if (operator === 'and') {
+                        andLike(where, field, value);
+                    }
+                    else if (operator === 'or') {
+                        orLike(where, field, value);
+                    }
+                    else if (operator === 'not') {
+                        notLike(where, field, value);
+                    }
+                }
 
-            /*
-             Like fields
-             */
-            if (field === 'name'
-                || field === 'text') {
-                if (operator === 'and') {
-                    andLike(where, field, value);
+                /*
+                 Type fields
+                 */
+                if (field === 'supertypes'
+                    || field === 'types'
+                    || field === 'subtypes') {
+                    if (operator === 'and') {
+                        andContains(where, field, value);
+                    }
+                    else if (operator === 'or') {
+                        orContains(where, field, value);
+                    }
+                    else if (operator === 'not') {
+                        notContains(where, field, value);
+                    }
                 }
-                else if (operator === 'or') {
-                    orLike(where, field, value);
-                }
-                else if (operator === 'not') {
-                    notLike(where, field, value);
-                }
-            }
 
-            /*
-             Type fields
-             */
-            if (field === 'supertypes'
-                || field === 'types'
-                || field === 'subtypes') {
-                if (operator === 'and') {
-                    andContains(where, field, value);
+                /*
+                 Colors
+                 */
+                if (field === 'coloridentity') {
+                    if (operator === 'and') {
+                        andContains(where, field, value.toUpperCase());
+                    }
+                    else if (operator === 'not') {
+                        notContains(where, field, value.toUpperCase());
+                    }
                 }
-                else if (operator === 'or') {
-                    orContains(where, field, value);
-                }
-                else if (operator === 'not') {
-                    notContains(where, field, value);
-                }
-            }
 
-            /*
-             Colors
-             */
-            if (field === 'coloridentity') {
-                if (operator === 'and') {
-                    andContains(where, field, value.toUpperCase());
-                }
-                else if (operator === 'not') {
-                    notContains(where, field, value.toUpperCase());
-                }
-            }
-
-            /*
-             Ordering
-             */
-            if (field === 'order') {
-                if (operator === 'ascending') {
-                    order.push([value.toLowerCase(), 'ASC']);
-                }
-                else if (operator === 'descending') {
-                    order.push([value.toLowerCase(), 'DESC']);
+                /*
+                 Ordering
+                 */
+                if (field === 'order') {
+                    if (operator === 'ascending') {
+                        order.push([value.toLowerCase(), 'ASC']);
+                    }
+                    else if (operator === 'descending') {
+                        order.push([value.toLowerCase(), 'DESC']);
+                    }
                 }
             }
         }

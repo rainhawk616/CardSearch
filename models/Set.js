@@ -56,6 +56,11 @@ module.exports = function (sequelize) {
             translations: {
                 field: "translations",
                 type: Sequelize.JSONB
+            },
+            numberOfCards: {
+                field: "numberofcards",
+                type: Sequelize.INTEGER,
+                allowNull: false
             }
         },
         {

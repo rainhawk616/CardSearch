@@ -437,7 +437,8 @@ function findOrCreateSet(setJson, success, error) {
                             oldcode: setJson.oldCode,
                             onlineOnly: setJson.onlineOnly,
                             magicRaritiesCodes: setJson.magicRaritiesCodes,
-                            translations: setJson.translations
+                            translations: setJson.translations,
+                            numberOfCards: setJson.cards.length
                         });
 
                         newSet.setBorder(border, {save: false});
