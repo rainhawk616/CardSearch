@@ -30,19 +30,19 @@ block content
                             td
                                 p Playable in
                             td
-                                input.ms.color#or-w(type='radio' autocomplete='off' name='w' checked data-operator='or')
+                                input.ms.color#or-w(type='radio' autocomplete='off' name='w' data-operator='or')
                                 label.ms.ms-cost.ms-w.ms-2x(for='or-w')
                             td
-                                input.ms.color#or-u(type='radio' autocomplete='off' name='u' checked data-operator='or')
+                                input.ms.color#or-u(type='radio' autocomplete='off' name='u' data-operator='or')
                                 label.ms.ms-cost.ms-u.ms-2x(for='or-u')
                             td
-                                input.ms.color#or-b(type='radio' autocomplete='off' name='b' checked data-operator='or')
+                                input.ms.color#or-b(type='radio' autocomplete='off' name='b' data-operator='or')
                                 label.ms.ms-cost.ms-b.ms-2x(for='or-b')
                             td
-                                input.ms.color#or-r(type='radio' autocomplete='off' name='r' checked data-operator='or')
+                                input.ms.color#or-r(type='radio' autocomplete='off' name='r' data-operator='or')
                                 label.ms.ms-cost.ms-r.ms-2x(for='or-r')
                             td
-                                input.ms.color#or-g(type='radio' autocomplete='off' name='g' checked data-operator='or')
+                                input.ms.color#or-g(type='radio' autocomplete='off' name='g' data-operator='or')
                                 label.ms.ms-cost.ms-g.ms-2x(for='or-g')
                         tr
                             td
@@ -150,7 +150,7 @@ block content
             label(for='queryPreview') Query
             pre#queryPreview
         label(for='queryPreview2') Query 2.0
-            div#queryPreview2
+        div#queryPreview2
         form#form(action='/results' method='get')
             //input#query(type='hidden' name='query' value='%7B%7D')
             input(type='hidden' name='page' value='1')
