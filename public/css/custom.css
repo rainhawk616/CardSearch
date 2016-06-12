@@ -92,42 +92,36 @@ table.set > tbody > tr > td {
 }
 
 input[type=checkbox].ms, input[type=radio].ms {
-    display:none;
+    display: none;
 }
 
-input[type=checkbox].ms + label, input[type=radio].ms + label
-{
+input[type=checkbox].ms + label, input[type=radio].ms + label {
     background-color: lightgray;
     color: darkgray;
     cursor: pointer;
 }
 
-input[type=checkbox].ms:checked + label.ms-r, input[type=radio].ms:checked + label.ms-r
-{
+input[type=checkbox].ms:checked + label.ms-r, input[type=radio].ms:checked + label.ms-r {
     background-color: #DB8664;
     color: #111;
 }
 
-input[type=checkbox].ms:checked + label.ms-w, input[type=radio].ms:checked + label.ms-w
-{
+input[type=checkbox].ms:checked + label.ms-w, input[type=radio].ms:checked + label.ms-w {
     background-color: #F0F2C0;
     color: #111;
 }
 
-input[type=checkbox].ms:checked + label.ms-g, input[type=radio].ms:checked + label.ms-g
-{
+input[type=checkbox].ms:checked + label.ms-g, input[type=radio].ms:checked + label.ms-g {
     background-color: #93B483;
     color: #111;
 }
 
-input[type=checkbox].ms:checked + label.ms-b, input[type=radio].ms:checked + label.ms-b
-{
+input[type=checkbox].ms:checked + label.ms-b, input[type=radio].ms:checked + label.ms-b {
     background-color: #ACA29A;
     color: #111;
 }
 
-input[type=checkbox].ms:checked + label.ms-u, input[type=radio].ms:checked + label.ms-u
-{
+input[type=checkbox].ms:checked + label.ms-u, input[type=radio].ms:checked + label.ms-u {
     background-color: #B5CDE3;
     color: #111;
 }

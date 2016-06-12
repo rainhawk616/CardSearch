@@ -4,6 +4,68 @@ block content
     h1=title
     .col-md-8.col-xs-12
         .form-group
+            label Color Identity
+            .input-group(data-field='coloridentity' data-field-name='Color Identity')
+                table
+                    tbody
+                        tr
+                            td
+                                p Must have
+                            td
+                                input.ms.color#and-red(type='radio' autocomplete='off' name='r' data-operator='and')
+                                label.ms.ms-cost.ms-r.ms-2x(for='and-red')
+                            td
+                                input.ms.color#and-white(type='radio' autocomplete='off' name='w' data-operator='and')
+                                label.ms.ms-cost.ms-w.ms-2x(for='and-white')
+                            td
+                                input.ms.color#and-green(type='radio' autocomplete='off' name='g' data-operator='and')
+                                label.ms.ms-cost.ms-g.ms-2x(for='and-green')
+                            td
+                                input.ms.color#and-black(type='radio' autocomplete='off' name='b' data-operator='and')
+                                label.ms.ms-cost.ms-b.ms-2x(for='and-black')
+                            td
+                                input.ms.color#and-blue(type='radio' autocomplete='off' name='u' data-operator='and')
+                                label.ms.ms-cost.ms-u.ms-2x(for='and-blue')
+                        tr
+                            td
+                                p Playable in
+                            td
+                                input.ms.color#or-red(type='radio' autocomplete='off' name='r' checked data-operator='or')
+                                label.ms.ms-cost.ms-r.ms-2x(for='or-red')
+                            td
+                                input.ms.color#or-white(type='radio' autocomplete='off' name='w' checked data-operator='or')
+                                label.ms.ms-cost.ms-w.ms-2x(for='or-white')
+                            td
+                                input.ms.color#or-green(type='radio' autocomplete='off' name='g' checked data-operator='or')
+                                label.ms.ms-cost.ms-g.ms-2x(for='or-green')
+                            td
+                                input.ms.color#or-black(type='radio' autocomplete='off' name='b' checked data-operator='or')
+                                label.ms.ms-cost.ms-b.ms-2x(for='or-black')
+                            td
+                                input.ms.color#or-blue(type='radio' autocomplete='off' name='u' checked data-operator='or')
+                                label.ms.ms-cost.ms-u.ms-2x(for='or-blue')
+                        tr
+                            td
+                                p Exclude
+                            td
+                                input.ms.color#not-red(type='radio' autocomplete='off' name='r' data-operator='not')
+                                label.ms.ms-cost.ms-r.ms-2x(for='not-red')
+                            td
+                                input.ms.color#not-white(type='radio' autocomplete='off' name='w' data-operator='not')
+                                label.ms.ms-cost.ms-w.ms-2x(for='not-white')
+                            td
+                                input.ms.color#not-green(type='radio' autocomplete='off' name='g' data-operator='not')
+                                label.ms.ms-cost.ms-g.ms-2x(for='not-green')
+                            td
+                                input.ms.color#not-black(type='radio' autocomplete='off' name='b' data-operator='not')
+                                label.ms.ms-cost.ms-b.ms-2x(for='not-black')
+                            td
+                                input.ms.color#not-blue(type='radio' autocomplete='off' name='u' data-operator='not')
+                                label.ms.ms-cost.ms-u.ms-2x(for='not-blue')
+                .input-group-btn.hide
+                    a.btn.btn-success.updateColorIdentity
+                        .glyphicon.glyphicon-plus
+        .form-group
             label Name
             .input-group(data-field='name' data-field-name='Name')
                 select.selectpicker.operator
@@ -82,98 +144,10 @@ block content
                 .input-group-btn
                     a.btn.btn-success.addQuery
                         .glyphicon.glyphicon-plus
-        .form-group
-            label Colors (not implemented)
-            .input-group(data-field='colors' data-field-name='Colors')
-                select.selectpicker.operator
-                    option(value='and') And
-                    option(value='or') Or
-                    option(value='not') Not
-                div(style='border: 1px solid #ccc;height:34px;display:flex;justify-content:space-around')
-                    span
-                        input.ms#red(type='checkbox' autocomplete='off' name='red')
-                        label.ms.ms-cost.ms-r.ms-2x(for='red')
-                    span
-                        input.ms#white(type='checkbox' autocomplete='off')
-                        label.ms.ms-cost.ms-w.ms-2x(for='white')
-                    span
-                        input.ms#green(type='checkbox' autocomplete='off')
-                        label.ms.ms-cost.ms-g.ms-2x(for='green')
-                    span
-                        input.ms#black(type='checkbox' autocomplete='off')
-                        label.ms.ms-cost.ms-b.ms-2x(for='black')
-                    span
-                        input.ms#blue(type='checkbox' autocomplete='off')
-                        label.ms.ms-cost.ms-u.ms-2x(for='blue')
-                .input-group-btn
-                    a.btn.btn-success.addQuery
-                        .glyphicon.glyphicon-plus
-        .form-group
-            label Colors (not implemented)
-            .input-group(data-field='colors' data-field-name='Colors')
-                table
-                    tbody
-                        tr
-                            td
-                                p Must have
-                            td
-                                input.ms#must-red(type='radio' autocomplete='off' name='red')
-                                label.ms.ms-cost.ms-r.ms-2x(for='must-red')
-                            td
-                                input.ms#must-white(type='radio' autocomplete='off' name='white')
-                                label.ms.ms-cost.ms-w.ms-2x(for='must-white')
-                            td
-                                input.ms#must-green(type='radio' autocomplete='off' name='green')
-                                label.ms.ms-cost.ms-g.ms-2x(for='must-green')
-                            td
-                                input.ms#must-black(type='radio' autocomplete='off' name='black')
-                                label.ms.ms-cost.ms-b.ms-2x(for='must-black')
-                            td
-                                input.ms#must-blue(type='radio' autocomplete='off' name='blue')
-                                label.ms.ms-cost.ms-u.ms-2x(for='must-blue')
-                        tr
-                            td
-                                p Playable in
-                            td
-                                input.ms#playable-red(type='radio' autocomplete='off' name='red' checked)
-                                label.ms.ms-cost.ms-r.ms-2x(for='playable-red')
-                            td
-                                input.ms#playable-white(type='radio' autocomplete='off' name='white' checked)
-                                label.ms.ms-cost.ms-w.ms-2x(for='playable-white')
-                            td
-                                input.ms#playable-green(type='radio' autocomplete='off' name='green' checked)
-                                label.ms.ms-cost.ms-g.ms-2x(for='playable-green')
-                            td
-                                input.ms#playable-black(type='radio' autocomplete='off' name='black' checked)
-                                label.ms.ms-cost.ms-b.ms-2x(for='playable-black')
-                            td
-                                input.ms#playable-blue(type='radio' autocomplete='off' name='blue' checked)
-                                label.ms.ms-cost.ms-u.ms-2x(for='playable-blue')
-                        tr
-                            td
-                                p Exclude
-                            td
-                                input.ms#exclude-red(type='radio' autocomplete='off' name='red')
-                                label.ms.ms-cost.ms-r.ms-2x(for='exclude-red')
-                            td
-                                input.ms#exclude-white(type='radio' autocomplete='off' name='white')
-                                label.ms.ms-cost.ms-w.ms-2x(for='exclude-white')
-                            td
-                                input.ms#exclude-green(type='radio' autocomplete='off' name='green')
-                                label.ms.ms-cost.ms-g.ms-2x(for='exclude-green')
-                            td
-                                input.ms#exclude-black(type='radio' autocomplete='off' name='black')
-                                label.ms.ms-cost.ms-b.ms-2x(for='exclude-black')
-                            td
-                                input.ms#exclude-blue(type='radio' autocomplete='off' name='blue')
-                                label.ms.ms-cost.ms-u.ms-2x(for='exclude-blue')
-                .input-group-btn
-                    a.btn.btn-success.addQuery
-                        .glyphicon.glyphicon-plus
 
     .col-md-4.col-xs-12
-        //label(for='queryPreview') Query
-        //pre#queryPreview
+        label(for='queryPreview') Query
+        pre#queryPreview
         label(for='queryPreview2') Query 2.0
         div#queryPreview2
         form#form(action='/results' method='post')
@@ -189,6 +163,28 @@ block content
         function setQueryJson(json) {
             $('#query').val(encodeURIComponent(JSON.stringify(json)));
             updateQueryPreview();
+        }
+
+        function updateColorIdentity(event) {
+            var inputGroup = $(this).closest('.input-group');
+            var colors = inputGroup.find('.color:checked');
+
+            var query = getQueryJson();
+            if (query === null || query === undefined || query === '')
+                query = {};
+
+            for (var i = 0; i < colors.length; i++) {
+                var color = $(colors[i]);
+
+                query[color.attr('name')] = {
+                    field: inputGroup.data('field'),
+                    operator: color.data('operator'),
+                    value: color.attr('name')
+                };
+            }
+
+            setQueryJson(query);
+            console.log(query);
         }
 
         function addClause(event) {
@@ -237,14 +233,14 @@ block content
             console.log(query);
         }
 
-        function removeClause(uuid) {
+        function removeClause(key) {
             var query = getQueryJson();
 
             if (query === null || query === undefined || query === '')
                 query = {};
 
-            if (query.hasOwnProperty(uuid)) {
-                delete query[uuid];
+            if (query.hasOwnProperty(key)) {
+                delete query[key];
             }
 
             setQueryJson(query);
@@ -263,20 +259,25 @@ block content
 
             queryPreview.empty();
 
-            for (var uuid in query) {
-                if (query.hasOwnProperty(uuid)) {
-                    var clause = query[uuid];
+            for (var key in query) {
+                if (query.hasOwnProperty(key)) {
 
-                    var kill = "<a class='glyphicon glyphicon-remove-sign pointer' onclick='removeClause(\"" + uuid + "\")'></a>";
-                    var field = clause.field.replace(/\w\S*/g, function (txt) {
-                        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-                    });
-                    var operator = clause.operator.toUpperCase();
-                    var value = clause.value;
-                    var child = '<div class="form-group">' + kill + ' ' + field + ' ' + operator + ' \'' + value + '\'</div>'
+                    var clause = query[key];
 
-                    queryPreview.append(child);
+                    if (clause.field === 'coloridentity') {
+                        continue;
+                    }
+                    else {
+                        var kill = "<a class='glyphicon glyphicon-remove-sign pointer' onclick='removeClause(\"" + key + "\")'></a>";
+                        var field = clause.field.replace(/\w\S*/g, function (txt) {
+                            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                        });
+                        var operator = clause.operator.toUpperCase();
+                        var value = clause.value;
+                        var child = '<div class="form-group">' + kill + ' ' + field + ' ' + operator + ' \'' + value + '\'</div>'
 
+                        queryPreview.append(child);
+                    }
                 }
             }
         }
@@ -287,6 +288,8 @@ block content
 
             $('.addQuery').click(addClause);
 
+            $('.updateColorIdentity').click(updateColorIdentity);
+
 
             $('.value').keyup(function (event) {
                 if (event.keyCode == 13) {
@@ -296,6 +299,7 @@ block content
 
             $("#form").submit(function (event) {
                 $('.addQuery').click();
+                $('.updateColorIdentity').click();
             });
 
         });

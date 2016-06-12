@@ -193,7 +193,7 @@ module.exports = {
             }
 
             /*
-             Supertype
+             Type fields
              */
             if (field === 'supertypes'
                 || field === 'types'
@@ -206,6 +206,18 @@ module.exports = {
                 }
                 else if (operator === 'not') {
                     notContains(where, field, value);
+                }
+            }
+
+            /*
+             Colors
+             */
+            if (field === 'coloridentity') {
+                if (operator === 'and') {
+                    andContains(where, field, value.toUpperCase());
+                }
+                else if (operator === 'not') {
+                    notContains(where, field, value.toUpperCase());
                 }
             }
 
@@ -342,5 +354,5 @@ function notContains(where, fieldName, value) {
     var and = outerAndOperator['$and'];
 
     //'(NOT "Card"."'+fieldName+'" @>  \'["' + value + '"]\') or ("Card"."'+fieldName+'" @>  \'["' + value + '"]\' is unknown)'
-    and.push(sequelize.literal('(NOT "Card"."' + fieldName + '" @>  \'["' + value + '"]\') or ("Card"."' + fieldName + '" @>  \'["' + value + '"]\' is unknown)'));
+    and.push(sequelize.literal('((NOT "Card"."' + fieldName + '" @>  \'["' + value + '"]\') or ("Card"."' + fieldName + '" @>  \'["' + value + '"]\' is unknown))'));
 }
