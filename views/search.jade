@@ -159,6 +159,8 @@ block content
                 a.btn.btn-danger(type='submit' onclick='removeAllClauses();') Clear
     script(type='text/javascript').
         function getQueryJson() {
+            if (Cookies.get('query') === undefined)
+                setQueryJson({});
             return JSON.parse(Cookies.get('query'));
         }
 
