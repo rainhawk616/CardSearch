@@ -12,57 +12,57 @@ block content
                             td
                                 p Must have
                             td
-                                input.ms.color#and-r(type='radio' autocomplete='off' name='r' data-operator='and')
-                                label.ms.ms-cost.ms-r.ms-2x(for='and-r')
-                            td
                                 input.ms.color#and-w(type='radio' autocomplete='off' name='w' data-operator='and')
                                 label.ms.ms-cost.ms-w.ms-2x(for='and-w')
                             td
-                                input.ms.color#and-g(type='radio' autocomplete='off' name='g' data-operator='and')
-                                label.ms.ms-cost.ms-g.ms-2x(for='and-g')
+                                input.ms.color#and-u(type='radio' autocomplete='off' name='u' data-operator='and')
+                                label.ms.ms-cost.ms-u.ms-2x(for='and-u')
                             td
                                 input.ms.color#and-b(type='radio' autocomplete='off' name='b' data-operator='and')
                                 label.ms.ms-cost.ms-b.ms-2x(for='and-b')
                             td
-                                input.ms.color#and-u(type='radio' autocomplete='off' name='u' data-operator='and')
-                                label.ms.ms-cost.ms-u.ms-2x(for='and-u')
+                                input.ms.color#and-r(type='radio' autocomplete='off' name='r' data-operator='and')
+                                label.ms.ms-cost.ms-r.ms-2x(for='and-r')
+                            td
+                                input.ms.color#and-g(type='radio' autocomplete='off' name='g' data-operator='and')
+                                label.ms.ms-cost.ms-g.ms-2x(for='and-g')
                         tr
                             td
                                 p Playable in
                             td
-                                input.ms.color#or-r(type='radio' autocomplete='off' name='r' checked data-operator='or')
-                                label.ms.ms-cost.ms-r.ms-2x(for='or-r')
-                            td
                                 input.ms.color#or-w(type='radio' autocomplete='off' name='w' checked data-operator='or')
                                 label.ms.ms-cost.ms-w.ms-2x(for='or-w')
                             td
-                                input.ms.color#or-g(type='radio' autocomplete='off' name='g' checked data-operator='or')
-                                label.ms.ms-cost.ms-g.ms-2x(for='or-g')
+                                input.ms.color#or-u(type='radio' autocomplete='off' name='u' checked data-operator='or')
+                                label.ms.ms-cost.ms-u.ms-2x(for='or-u')
                             td
                                 input.ms.color#or-b(type='radio' autocomplete='off' name='b' checked data-operator='or')
                                 label.ms.ms-cost.ms-b.ms-2x(for='or-b')
                             td
-                                input.ms.color#or-u(type='radio' autocomplete='off' name='u' checked data-operator='or')
-                                label.ms.ms-cost.ms-u.ms-2x(for='or-u')
+                                input.ms.color#or-r(type='radio' autocomplete='off' name='r' checked data-operator='or')
+                                label.ms.ms-cost.ms-r.ms-2x(for='or-r')
+                            td
+                                input.ms.color#or-g(type='radio' autocomplete='off' name='g' checked data-operator='or')
+                                label.ms.ms-cost.ms-g.ms-2x(for='or-g')
                         tr
                             td
                                 p Exclude
                             td
-                                input.ms.color#not-r(type='radio' autocomplete='off' name='r' data-operator='not')
-                                label.ms.ms-cost.ms-r.ms-2x(for='not-r')
-                            td
                                 input.ms.color#not-w(type='radio' autocomplete='off' name='w' data-operator='not')
                                 label.ms.ms-cost.ms-w.ms-2x(for='not-w')
                             td
-                                input.ms.color#not-g(type='radio' autocomplete='off' name='g' data-operator='not')
-                                label.ms.ms-cost.ms-g.ms-2x(for='not-g')
+                                input.ms.color#not-u(type='radio' autocomplete='off' name='u' data-operator='not')
+                                label.ms.ms-cost.ms-u.ms-2x(for='not-u')
                             td
                                 input.ms.color#not-b(type='radio' autocomplete='off' name='b' data-operator='not')
                                 label.ms.ms-cost.ms-b.ms-2x(for='not-b')
                             td
-                                input.ms.color#not-u(type='radio' autocomplete='off' name='u' data-operator='not')
-                                label.ms.ms-cost.ms-u.ms-2x(for='not-u')
-                .input-group-btn.hide
+                                input.ms.color#not-r(type='radio' autocomplete='off' name='r' data-operator='not')
+                                label.ms.ms-cost.ms-r.ms-2x(for='not-r')
+                            td
+                                input.ms.color#not-g(type='radio' autocomplete='off' name='g' data-operator='not')
+                                label.ms.ms-cost.ms-g.ms-2x(for='not-g')
+                .input-group-btn.hidden
                     a.btn.btn-success.addColorIdentity
                         .glyphicon.glyphicon-plus
         .form-group
@@ -146,12 +146,14 @@ block content
                         .glyphicon.glyphicon-plus
 
     .col-md-4.col-xs-12
-        label(for='queryPreview') Query
-        pre#queryPreview
+        if process.env.DEVELOPMENT === 'true'
+            label(for='queryPreview') Query
+            pre#queryPreview
         label(for='queryPreview2') Query 2.0
-        div#queryPreview2
+            div#queryPreview2
         form#form(action='/results' method='get')
             //input#query(type='hidden' name='query' value='%7B%7D')
+            input(type='hidden' name='page' value='1')
             .form-group.btn-toolbar
                 button.btn.btn-primary(type='submit') Search
                 a.btn.btn-danger(type='submit' onclick='removeAllClauses();') Clear

@@ -2,10 +2,33 @@ extends layout
 
 block content
     h1=title
-    label(for'query') Query
-    pre#query=JSON.stringify({where: where, order: order}, null, 2)
-    if results.length > 0
-        a.btn.btn-default(onclick="back()") Back
+    if process.env.DEVELOPMENT === 'true'
+        label(for'query') Query
+        pre#query=JSON.stringify({where: where, order: order, limit: limit, offset: offset, pages: pages}, null, 2)
+    if results && results.length > 0
+        nav
+            ul.pagination
+                li
+                    a.btn.btn-default(href='#{page <= 1 ? "search" : "/results?page=" + (page - 1)}')
+                        span &laquo;
+                if page - 2 >= 1
+                    li
+                        a.btn.btn-default(href='/results?page=#{page - 2}') #{page - 2}
+                if page - 1 >= 1
+                    li
+                        a.btn.btn-default(href='/results?page=#{page - 1}') #{page - 1}
+                li.active
+                    a.btn.btn-default(href='/results?page=#{page}') #{page}
+                if page + 1 < pages
+                    li
+                        a.btn.btn-default(href='/results?page=#{page + 1}') #{page + 1}
+                if page + 2 < pages
+                    li
+                        a.btn.btn-default(href='/results?page=#{page + 2}') #{page + 2}
+                if page + 1 < pages
+                    li
+                        a.btn.btn-default(href='/results?page=#{page + 1}')
+                            span &raquo;
         table.table
             thead
                 tr
@@ -27,6 +50,28 @@ block content
                         td.power #{card.power}
                         td.toughness #{card.toughness}
                         td.oracle-text !{utils.magicify(card.text)}
+        nav
+            ul.pagination
+                li
+                    a.btn.btn-default(href='#{page === 0 ? "search" : "/results?page=" + (page - 1)}')
+                        span &laquo;
+                if( page - 2 >= 0 )
+                    li
+                        a.btn.btn-default(href='/results?page=#{page - 2}') #{page - 1}
+                if( page - 1 >= 0 )
+                    li
+                        a.btn.btn-default(href='/results?page=#{page - 1}') #{page}
+                li.active
+                    a.btn.btn-default(href='/results?page=#{page}') #{page + 1}
+                li
+                    a.btn.btn-default(href='/results?page=#{page + 1}') #{page + 2}
+                li
+                    a.btn.btn-default(href='/results?page=#{page + 2}') #{page + 3}
+                if( results.length === limit )
+                    li
+                        a.btn.btn-default(href='/results?page=#{page + 1}')
+                            span &raquo;
     else
         p No matching results found. Try searching again with different or fewer parameters.
-    a.btn.btn-default(onclick="back()") Back
+        .btn-toolbar
+            a.btn.btn-default(onclick='back()') Back

@@ -160,9 +160,14 @@ module.exports = {
 
         var where = {};
         var order = [];
-        var supertypeWhere = {};
         var i = 0;
         var query = JSON.parse(req.cookies.query);
+        var page = parseInt(req.query.page);
+        if (isNaN(page))
+            page = 1;
+        var limit = 50;
+        var offset = (page - 1) * limit;
+        ;
 
         for (var key in query) {
             if (query.hasOwnProperty(key)) {
@@ -241,15 +246,22 @@ module.exports = {
         console.log('where:', JSON.stringify(where, null, 2));
         console.log('order:', JSON.stringify(order, null, 2));
 
-        models.Card.findAll({
+        models.Card.findAndCount({
             where: where,
-            order: order
-        }).then(function (results) {
+            order: order,
+            limit: limit,
+            offset: offset
+        }).then(function (result) {
+
             res.render('results', {
                 title: 'Results',
-                results: results,
+                results: result.rows,
                 where: where,
-                order: order
+                order: order,
+                limit: limit,
+                offset: offset,
+                page: page,
+                pages: (result.count / limit) + 1
             });
         });
     }
