@@ -53,21 +53,23 @@ block content
         nav
             ul.pagination
                 li
-                    a.btn.btn-default(href='#{page === 0 ? "search" : "/results?page=" + (page - 1)}')
+                    a.btn.btn-default(href='#{page <= 1 ? "search" : "/results?page=" + (page - 1)}')
                         span &laquo;
-                if( page - 2 >= 0 )
+                if page - 2 >= 1
                     li
-                        a.btn.btn-default(href='/results?page=#{page - 2}') #{page - 1}
-                if( page - 1 >= 0 )
+                        a.btn.btn-default(href='/results?page=#{page - 2}') #{page - 2}
+                if page - 1 >= 1
                     li
-                        a.btn.btn-default(href='/results?page=#{page - 1}') #{page}
+                        a.btn.btn-default(href='/results?page=#{page - 1}') #{page - 1}
                 li.active
-                    a.btn.btn-default(href='/results?page=#{page}') #{page + 1}
-                li
-                    a.btn.btn-default(href='/results?page=#{page + 1}') #{page + 2}
-                li
-                    a.btn.btn-default(href='/results?page=#{page + 2}') #{page + 3}
-                if( results.length === limit )
+                    a.btn.btn-default(href='/results?page=#{page}') #{page}
+                if page + 1 < pages
+                    li
+                        a.btn.btn-default(href='/results?page=#{page + 1}') #{page + 1}
+                if page + 2 < pages
+                    li
+                        a.btn.btn-default(href='/results?page=#{page + 2}') #{page + 2}
+                if page + 1 < pages
                     li
                         a.btn.btn-default(href='/results?page=#{page + 1}')
                             span &raquo;
