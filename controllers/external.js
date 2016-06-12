@@ -222,10 +222,10 @@ module.exports = {
                  */
                 if (field === 'order') {
                     if (operator === 'ascending') {
-                        order.push([value.toLowerCase(), 'ASC']);
+                        order.push([value.toLowerCase(), 'ASC NULLS FIRST']);
                     }
                     else if (operator === 'descending') {
-                        order.push([value.toLowerCase(), 'DESC']);
+                        order.push([value.toLowerCase(), 'DESC NULLS LAST']);
                     }
                 }
             }
