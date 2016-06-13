@@ -269,7 +269,8 @@ module.exports = {
                 limit: limit,
                 offset: offset,
                 page: page,
-                pages: (result.count / limit) + 1
+                pages: Math.ceil(result.count / limit),
+                count: result.count
             });
         });
     }
