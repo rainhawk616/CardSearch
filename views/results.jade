@@ -1,34 +1,14 @@
 extends layout
+include partials/paginator
 
 block content
     h1=title
+    p Your search critera returned #{count} cards.
     if process.env.DEVELOPMENT === 'true'
         label(for'query') Query
         pre#query=JSON.stringify({where: where, order: order, limit: limit, offset: offset, pages: pages}, null, 2)
     if results && results.length > 0
-        nav
-            ul.pagination
-                li
-                    a.btn.btn-default(href='#{page <= 1 ? "search" : "/results?page=" + (page - 1)}')
-                        span &laquo;
-                if page - 2 >= 1
-                    li
-                        a.btn.btn-default(href='/results?page=#{page - 2}') #{page - 2}
-                if page - 1 >= 1
-                    li
-                        a.btn.btn-default(href='/results?page=#{page - 1}') #{page - 1}
-                li.active
-                    a.btn.btn-default(href='/results?page=#{page}') #{page}
-                if page + 1 < pages
-                    li
-                        a.btn.btn-default(href='/results?page=#{page + 1}') #{page + 1}
-                if page + 2 < pages
-                    li
-                        a.btn.btn-default(href='/results?page=#{page + 2}') #{page + 2}
-                if page + 1 < pages
-                    li
-                        a.btn.btn-default(href='/results?page=#{page + 1}')
-                            span &raquo;
+        +paginator('results','search', pages, page)
         table.table
             thead
                 tr
@@ -50,29 +30,7 @@ block content
                         td.power #{card.power}
                         td.toughness #{card.toughness}
                         td.oracle-text !{utils.magicify(card.text)}
-        nav
-            ul.pagination
-                li
-                    a.btn.btn-default(href='#{page <= 1 ? "search" : "/results?page=" + (page - 1)}')
-                        span &laquo;
-                if page - 2 >= 1
-                    li
-                        a.btn.btn-default(href='/results?page=#{page - 2}') #{page - 2}
-                if page - 1 >= 1
-                    li
-                        a.btn.btn-default(href='/results?page=#{page - 1}') #{page - 1}
-                li.active
-                    a.btn.btn-default(href='/results?page=#{page}') #{page}
-                if page + 1 < pages
-                    li
-                        a.btn.btn-default(href='/results?page=#{page + 1}') #{page + 1}
-                if page + 2 < pages
-                    li
-                        a.btn.btn-default(href='/results?page=#{page + 2}') #{page + 2}
-                if page + 1 < pages
-                    li
-                        a.btn.btn-default(href='/results?page=#{page + 1}')
-                            span &raquo;
+        +paginator('results','search', pages, page)
     else
         p No matching results found. Try searching again with different or fewer parameters.
         .btn-toolbar

@@ -1,0 +1,26 @@
+mixin paginator(url, backurl, pages, page)
+    nav.navbar-right
+        ul.pagination
+            li
+                a.btn.btn-default(href='#{page <= 1 ? backurl : url + "?page=" + (page - 1)}')
+                    span &laquo;
+            -var left = false
+            -var right = false
+            -var i = 1
+            while i <= pages
+                if i <= 2 || (i > page - 2 && i < page + 2 ) || i > pages - 2
+                    li(class="#{page === i ? 'active' : ''}")
+                        a.btn.btn-default(href='#{url}?page=#{i}') #{i}
+                else if i >= 2 && i <= page - 2 && !left
+                    -left=true
+                    li
+                        a.btn.btn-default(disabled) ...
+                else if i >= page + 2 && i <= pages - 2 && !right
+                    -right=true
+                    li
+                        a.btn.btn-default(disabled) ...
+                -i++
+            if page < pages
+                li
+                    a.btn.btn-default(href='#{url}?page=#{page + 1}')
+                        span &raquo;
