@@ -121,6 +121,10 @@ module.exports = function (sequelize, DataTypes) {
                         foreignKey: 'cardid',
                         constraints: true
                     });
+                    Card.hasMany(models.Printing, {
+                        foreignKey: 'cardid',
+                        constraints: true
+                    });
                 }
             },
             getterMethods: {

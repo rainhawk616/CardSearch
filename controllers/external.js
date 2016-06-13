@@ -258,7 +258,18 @@ module.exports = {
             where: where,
             order: order,
             limit: limit,
-            offset: offset
+            offset: offset,
+            include: [
+                {
+                    model: models.Printing,
+                    limit: 1,
+                    attributes: ['printingid', 'cardid', 'multiverseid'],
+                    order: [['multiverseid', 'DESC NULLS LAST']]
+                },
+                {
+                    model: models.Layout
+                }
+            ]
         }).then(function (result) {
 
             res.render('results', {

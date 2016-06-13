@@ -73,6 +73,14 @@ userController.registerRoutes(app);
 adminController.registerRoutes(app);
 
 /**
+ * This would show 0.jpg for any 404 images if we were hosting our own images.
+ */
+app.get('/images/*.jpg', function (req, res) {
+    res.status(404);
+    res.sendfile(path.join(__dirname, '/public/images/0.jpg'));
+});
+
+/**
  * Exception handlers
  */
 app.use(function (req, res, next) {

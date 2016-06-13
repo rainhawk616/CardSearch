@@ -103,10 +103,16 @@ module.exports = function (sequelize, DataTypes) {
                         }
                     })
                 }
+            }
+            ,
+            getterMethods: {
+                image: function () {
+                    return process.env.IMAGES_PATH + this.multiverseid + '.jpg';
+                }
             },
             indexes: [
                 {
-                    fields: ['cardid', 'rarityid', 'setid']
+                    fields: ['cardid', 'multiverseid', 'rarityid', 'setid']
                 },
                 {
                     fields: ['foreignnames'],

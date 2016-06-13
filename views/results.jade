@@ -12,7 +12,7 @@ block content
         table.table
             thead
                 tr
-                    th image
+                    th
                     th Name
                     th Mana Cost
                     th Type
@@ -22,16 +22,31 @@ block content
             tbody
                 each card in results
                     tr
-                        td.image
-                            img.image
-                        td.name #{card.name}
-                        td.mana-cost !{utils.magicify(card.manaCost)}
-                        td.type #{card.formattedType}
-                        td.power #{card.power}
-                        td.toughness #{card.toughness}
-                        td.oracle-text !{utils.magicify(card.text)}
+                        td
+                            img.image(class='#{card.Layout.description === "plane" || card.Layout.description === "scheme" ? "image-landscape" : "image-portrait"}' data-src="#{card.Printings[0].image}")
+                        td
+                            .name #{card.name}
+                        td
+                            .mana-cost !{utils.magicify(card.manaCost)}
+                        td
+                            .type #{card.formattedType}
+                        td
+                            .power #{card.power}
+                        td
+                            .toughness #{card.toughness}
+                        td
+                            .oracle-text !{utils.magicify(card.text)}
         +paginator('results','search', pages, page)
     else
         p No matching results found. Try searching again with different or fewer parameters.
         .btn-toolbar
             a.btn.btn-default(onclick='back()') Back
+    script(type='text/javascript').
+        $('.image').error(function () {
+            $(this).attr('src', '#{process.env.IMAGES_PATH}0.jpg');
+        }).each(
+                function () {
+                    var image = $(this);
+                    image.attr('src', image.data('src'));
+                }
+        );

@@ -19,13 +19,23 @@ module.exports = {
 
         return string.replace(/{([^{}]+)}/g, function (fullReplace, capture) {
             var split=false;
+            var phyrexian = false;
 
             capture = capture.toLowerCase();
 
-            if( capture === 't')
+            if (capture === 't') {
                 capture = 'tap';
-            else if (capture === '∞')
+            }
+            if (capture === 'q') {
+                capture = 'untap';
+            }
+            else if (capture === '∞') {
                 capture = 'infinity';
+            }
+            else if (capture.indexOf('/p') !== -1) {
+                capture = capture.replace('/', '');
+                phyrexian = true;
+            }
             else if( capture.indexOf('/') !== -1 ) {
                 capture = capture.replace('/', '');
                 split=true;

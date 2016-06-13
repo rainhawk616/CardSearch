@@ -126,10 +126,18 @@ input[type=checkbox].ms:checked + label.ms-u, input[type=radio].ms:checked + lab
     color: #111;
 }
 
-.image {
+.image-portrait {
     width: 95px;
     height: 132px;
-    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    background-color: lightgrey;
+}
+
+.image-landscape {
+    width: 132px;
+    height: 95px;
+    border-radius: 6px;
+    background-color: lightgrey;
 }
 
 
