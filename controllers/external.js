@@ -159,7 +159,7 @@ module.exports = {
     },
     getResults: function (req, res) {
         if (req.cookies.query === null || req.cookies.query === undefined) {
-            req.flash('errors', {msg: 'Dack Faden stole all your cookies!'});
+            req.flash('errors', {msg: 'Dack Fayden stole all your cookies!'});
             req.session.save(function () {
                 res.redirect('/search');
             });
