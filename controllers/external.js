@@ -247,9 +247,8 @@ module.exports = {
         /*
          Add default ordering
          */
-        if (order.length === 0) {
-            order.push(['name', 'asc']);
-        }
+        order.push(['name', 'asc']);
+        order.push(['cardid', 'asc']);
 
         console.log('where:', JSON.stringify(where, null, 2));
         console.log('order:', JSON.stringify(order, null, 2));
