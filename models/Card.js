@@ -27,8 +27,50 @@ module.exports = function (sequelize, DataTypes) {
             power: {
                 type: Sequelize.STRING
             },
+            calculatedPower: {
+                field: "calculatedpower",
+                type: Sequelize.INTEGER,
+                set: function (val) {
+                    if (val === null || val === undefined) {
+                        this.setDataValue('calculatedPower', null);
+                    }
+                    else {
+                        var int = parseInt(val);
+                        if (isNaN(int)) {
+                            if (val.indexOf('*') !== -1) {
+                                int = 0;
+                            }
+                            else {
+                                int = null;
+                            }
+                        }
+                        this.setDataValue('calculatedPower', int);
+                    }
+                }
+            },
             toughness: {
                 type: Sequelize.STRING
+            },
+            calculatedToughness: {
+                field: "calculatedtoughness",
+                type: Sequelize.INTEGER,
+                set: function (val) {
+                    if (val === null || val === undefined) {
+                        this.setDataValue('calculatedToughness', null);
+                    }
+                    else {
+                        var int = parseInt(val);
+                        if (isNaN(int)) {
+                            if (val.indexOf('*') !== -1) {
+                                int = 0;
+                            }
+                            else {
+                                int = null;
+                            }
+                        }
+                        this.setDataValue('calculatedToughness', int);
+                    }
+                }
             },
             text: {
                 type: Sequelize.TEXT
@@ -172,7 +214,7 @@ module.exports = function (sequelize, DataTypes) {
                     fields: ['text']
                 },
                 {
-                    fields: ['manaCost']
+                    fields: ['manacost']
                 },
                 {
                     fields: ['cmc']

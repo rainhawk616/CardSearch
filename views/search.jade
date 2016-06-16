@@ -144,6 +144,48 @@ block content
                     a.btn.btn-success.add.addInt
                         .glyphicon.glyphicon-plus
         .form-group
+            label Power
+            .input-group(data-field='power' data-field-name='Power')
+                select.selectpicker.operator
+                    option(value='<') <
+                    option(value='<=') <=
+                    option(value='==') ==
+                    option(value='>=') >=
+                    option(value='>') >
+                    option(value='!=') !=
+                input.form-control.value(type='number' placeholder='Power')
+                .input-group-btn
+                    a.btn.btn-success.add.addInt
+                        .glyphicon.glyphicon-plus
+        .form-group
+            label Toughness
+            .input-group(data-field='toughness' data-field-name='Toughness')
+                select.selectpicker.operator
+                    option(value='<') <
+                    option(value='<=') <=
+                    option(value='==') ==
+                    option(value='>=') >=
+                    option(value='>') >
+                    option(value='!=') !=
+                input.form-control.value(type='number' placeholder='Toughness')
+                .input-group-btn
+                    a.btn.btn-success.add.addInt
+                        .glyphicon.glyphicon-plus
+        .form-group
+            label Loyalty
+            .input-group(data-field='loyalty' data-field-name='Loyalty')
+                select.selectpicker.operator
+                    option(value='<') <
+                    option(value='<=') <=
+                    option(value='==') ==
+                    option(value='>=') >=
+                    option(value='>') >
+                    option(value='!=') !=
+                input.form-control.value(type='number' placeholder='Loyalty')
+                .input-group-btn
+                    a.btn.btn-success.add.addInt
+                        .glyphicon.glyphicon-plus
+        .form-group
             label Order
             .input-group(data-field='order' data-field-name='Order')
                 select.selectpicker.operator

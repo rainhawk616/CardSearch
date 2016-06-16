@@ -233,6 +233,13 @@ module.exports = {
                  Ordering
                  */
                 if (field === 'order') {
+                    if (value === 'Power') {
+                        value = 'calculatedpower';
+                    }
+                    else if (value === 'Toughness') {
+                        value = 'calculatedtoughness';
+                    }
+
                     if (operator === 'ascending') {
                         order.push([value.toLowerCase(), 'ASC NULLS FIRST']);
                     }
@@ -244,7 +251,16 @@ module.exports = {
                 /*
                  Int fields
                  */
-                if (field === 'cmc') {
+                if (field === 'cmc'
+                    || field === 'power'
+                    || field === 'toughness'
+                    || field === 'loyalty') {
+                    if (field === 'power') {
+                        field = 'calculatedpower';
+                    }
+                    else if (field === 'toughness') {
+                        field = 'calculatedtoughness';
+                    }
                     compareInt(where, field, operator, value);
                 }
             }
