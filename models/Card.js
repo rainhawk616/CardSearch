@@ -172,6 +172,24 @@ module.exports = function (sequelize, DataTypes) {
                     fields: ['text']
                 },
                 {
+                    fields: ['manaCost']
+                },
+                {
+                    fields: ['cmc']
+                },
+                {
+                    fields: ['power']
+                },
+                {
+                    fields: ['toughness']
+                },
+                {
+                    fields: ['reserved']
+                },
+                {
+                    fields: ['loyalty']
+                },
+                {
                     fields: ['coloridentity'],
                     using: 'gin'
                 },

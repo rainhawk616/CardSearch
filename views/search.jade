@@ -63,7 +63,7 @@ block content
                                 input.ms.color#not-g(type='radio' autocomplete='off' name='g' data-operator='not')
                                 label.ms.ms-cost.ms-g.ms-2x(for='not-g')
                 .input-group-btn.hidden
-                    a.btn.btn-success.addColorIdentity
+                    a.btn.btn-success.add.addColorIdentity
                         .glyphicon.glyphicon-plus
         .form-group
             label Name
@@ -74,7 +74,7 @@ block content
                     option(value='not') Not
                 input.form-control.value(type='text' placeholder='Name')
                 .input-group-btn
-                    a.btn.btn-success.addQuery
+                    a.btn.btn-success.add.addString
                         .glyphicon.glyphicon-plus
         .form-group
             label Oracle Text
@@ -85,7 +85,7 @@ block content
                     option(value='not') Not
                 input.form-control.value(type='text' placeholder='Oracle text')
                 .input-group-btn
-                    a.btn.btn-success.addQuery
+                    a.btn.btn-success.add.addString
                         .glyphicon.glyphicon-plus
         .form-group
             label Supertype
@@ -99,7 +99,7 @@ block content
                     each supertype in supertypes
                         option #{supertype.description}
                 .input-group-btn
-                    a.btn.btn-success.addQuery
+                    a.btn.btn-success.add.addString
                         .glyphicon.glyphicon-plus
         .form-group
             label Type
@@ -113,7 +113,7 @@ block content
                     each type in types
                         option #{type.description}
                 .input-group-btn
-                    a.btn.btn-success.addQuery
+                    a.btn.btn-success.add.addString
                         .glyphicon.glyphicon-plus
         .form-group
             label Subtype
@@ -127,7 +127,21 @@ block content
                     each subtype in subtypes
                         option #{subtype.description}
                 .input-group-btn
-                    a.btn.btn-success.addQuery
+                    a.btn.btn-success.add.addString
+                        .glyphicon.glyphicon-plus
+        .form-group
+            label Converted Mana Cost
+            .input-group(data-field='cmc' data-field-name='CMC')
+                select.selectpicker.operator
+                    option(value='<') <
+                    option(value='<=') <=
+                    option(value='==') ==
+                    option(value='>=') >=
+                    option(value='>') >
+                    option(value='!=') !=
+                input.form-control.value(type='number' placeholder='CMC')
+                .input-group-btn
+                    a.btn.btn-success.add.addInt
                         .glyphicon.glyphicon-plus
         .form-group
             label Order
@@ -142,7 +156,7 @@ block content
                     option(value='Power') Power
                     option(value='Toughness') Toughness
                 .input-group-btn
-                    a.btn.btn-success.addQuery
+                    a.btn.btn-success.add.addString
                         .glyphicon.glyphicon-plus
 
     .col-md-4.col-xs-12
@@ -191,7 +205,7 @@ block content
             console.log(query);
         }
 
-        function addClause(event) {
+        function addString(event) {
             console.log('event:', event);
             console.log('this:', this);
 
@@ -227,7 +241,6 @@ block content
                 query[createGuid()] = {
                     field: inputGroup.data('field'),
                     operator: inputGroup.find('.operator.selectpicker').val(),
-                    comparator: inputGroup.find('.comparator.selectpicker').val(),
                     value: val
                 };
             }
@@ -235,6 +248,35 @@ block content
             setQueryJson(query);
 
             console.log(query);
+        }
+
+        function addInt(event) {
+            console.log('event:', event);
+            console.log('this:', this);
+
+            var inputGroup = $(this).closest('.input-group');
+            var value = inputGroup.find('.value').not('div');
+
+            if (value.val() === undefined || value.val() === null || value.val() === '')
+                return;
+
+            var val = parseInt(value.val());
+            value.val('');
+
+            if (isNaN(val))
+                return;
+
+            var query = getQueryJson();
+            if (query === null || query === undefined || query === '')
+                query = {};
+
+            query[createGuid()] = {
+                field: inputGroup.data('field'),
+                operator: inputGroup.find('.operator.selectpicker').val(),
+                value: val
+            };
+
+            setQueryJson(query);
         }
 
         function removeClause(key) {
@@ -317,19 +359,20 @@ block content
         $(document).ready(function () {
             updateQueryPreview();
 
-            $('.addQuery').click(addClause);
-
+            $('.addString').click(addString);
+            $('.addInt').click(addInt);
             $('.addColorIdentity').click(addColorIdentity);
 
 
             $('.value').keyup(function (event) {
                 if (event.keyCode == 13) {
-                    $(this).closest('.input-group').find('.btn.btn-success.addQuery').click();
+                    $(this).closest('.input-group').find('.btn.btn-success.add').click();
                 }
             });
 
             $("#form").submit(function (event) {
-                $('.addQuery').click();
+                $('.addString').click();
+                $('.addInt').click();
                 $('.addColorIdentity').click();
             });
 

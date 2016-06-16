@@ -3,11 +3,11 @@ include partials/paginator
 
 block content
     h1=title
-    p Your search critera returned #{count} cards.
     if process.env.DEVELOPMENT === 'true'
         label(for'query') Query
         pre#query=JSON.stringify({where: where, order: order, limit: limit, offset: offset, pages: pages}, null, 2)
     if results && results.length > 0
+        p Showing #{offset + 1}-#{Math.min(limit * page, count)} of #{count} cards found.
         +paginator('results','search', pages, page)
         table.table
             thead

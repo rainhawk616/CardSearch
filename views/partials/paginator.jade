@@ -1,27 +1,30 @@
 mixin paginator(url, backurl, pages, page)
-    nav.navbar-right
-        ul.pagination
-            if page !== 1
+    div
+        nav.navbar-left.pull-left
+            ul.pagination
                 li
-                    a.btn.btn-default(href='#{page <= 1 ? backurl : url + "?page=" + (page - 1)}')
-                        span Previous
-            -var left = false
-            -var right = false
-            -var i = 1
-            while i <= pages
-                if i == 1 || (i > page - 2 && i < page + 2 ) || i == pages
-                    li(class="#{page === i ? 'active' : ''}")
-                        a.btn.btn-default(href='#{url}?page=#{i}') #{i}
-                else if i >= 2 && i <= page - 2 && !left
-                    -left=true
+                    a.btn.btn-default(href='#{backurl}') Back
+        nav.navbar-right
+            ul.pagination
+                if page !== 1
                     li
-                        a.btn.btn-default(disabled) ...
-                else if i >= page + 2 && i <= pages - 2 && !right
-                    -right=true
+                        a.btn.btn-default(href='#{url + "?page=" + (page - 1)}') Previous
+                -var left = false
+                -var right = false
+                -var i = 1
+                while i <= pages
+                    if i == 1 || (i > page - 2 && i < page + 2 ) || i == pages
+                        li(class="#{page === i ? 'active' : ''}")
+                            a.btn.btn-default(href='#{url}?page=#{i}') #{i}
+                    else if i >= 2 && i <= page - 2 && !left
+                        -left=true
+                        li
+                            a.btn.btn-default(disabled) ...
+                    else if i >= page + 2 && i <= pages - 2 && !right
+                        -right=true
+                        li
+                            a.btn.btn-default(disabled) ...
+                    -i++
+                if page < pages
                     li
-                        a.btn.btn-default(disabled) ...
-                -i++
-            if page < pages
-                li
-                    a.btn.btn-default(href='#{url}?page=#{page + 1}')
-                        span Next
+                        a.btn.btn-default(href='#{url}?page=#{page + 1}') Next

@@ -182,7 +182,6 @@ module.exports = {
                 var clause = query[key];
                 var field = clause['field'].toLowerCase();
                 var operator = clause['operator'];
-                var comparator = clause['comparator'];
                 var value = clause['value'];
 
                 /*
@@ -241,6 +240,13 @@ module.exports = {
                         order.push([value.toLowerCase(), 'DESC NULLS LAST']);
                     }
                 }
+
+                /*
+                 Int fields
+                 */
+                if (field === 'cmc') {
+                    compareInt(where, field, operator, value);
+                }
             }
         }
 
@@ -286,6 +292,43 @@ module.exports = {
     }
 };
 
+function compareInt(where, fieldName, operator, value) {
+    var comp;
+
+    if (operator === '<')
+        comp = "$lt";
+    else if (operator === '<=')
+        comp = "$lte";
+    else if (operator === '==')
+        comp = "$and";
+    else if (operator === '>=')
+        comp = "$gte";
+    else if (operator === '>')
+        comp = "$gt";
+    else if (operator === '!=')
+        comp = "$ne";
+    else
+        return;
+
+    if (value === null || value === undefined || value === '')
+        return;
+
+    value = parseInt(value);
+    if (isNaN(value))
+        return;
+
+    if (where === null || where === undefined)
+        throw new Error('test');
+
+    if (!where.hasOwnProperty('$and'))
+        where['$and'] = [];
+    var and = where['$and'];
+
+    var clause = {};
+    clause[comp] = value;
+    and.push(sequelize.where(sequelize.fn('COALESCE', sequelize.col(fieldName), 0), clause));
+}
+
 function andLike(where, fieldName, value) {
     like(where, '$and', fieldName, value);
 }
@@ -305,20 +348,17 @@ function like(where, operator, fieldName, value, not) {
     if (where === null || where === undefined)
         throw new Error('test');
 
-    if (!where.hasOwnProperty(fieldName)) {
+    if (!where.hasOwnProperty(fieldName))
         where[fieldName] = {};
-    }
 
     var field = where[fieldName];
 
-    if (!field.hasOwnProperty('$and')) {
+    if (!field.hasOwnProperty('$and'))
         field['$and'] = {};
-    }
     var outerAndOperator = field['$and'];
 
-    if (!outerAndOperator.hasOwnProperty(operator)) {
+    if (!outerAndOperator.hasOwnProperty(operator))
         outerAndOperator[operator] = [];
-    }
     var innerOperator = outerAndOperator[operator];
 
     var clause = {};
@@ -328,59 +368,49 @@ function like(where, operator, fieldName, value, not) {
 }
 
 function andContains(where, fieldName, value) {
-    if (!where.hasOwnProperty(fieldName)) {
+    if (!where.hasOwnProperty(fieldName))
         where[fieldName] = {};
-    }
     var field = where[fieldName];
 
-    if (!field.hasOwnProperty('$and')) {
+    if (!field.hasOwnProperty('$and'))
         field['$and'] = {};
-    }
     var outerAndOperator = field['$and'];
 
-    if (!outerAndOperator.hasOwnProperty('$contains')) {
+    if (!outerAndOperator.hasOwnProperty('$contains'))
         outerAndOperator['$contains'] = [];
-    }
     var contains = outerAndOperator['$contains'];
 
     contains.push(value);
 }
 
 function orContains(where, fieldName, value) {
-    if (!where.hasOwnProperty(fieldName)) {
+    if (!where.hasOwnProperty(fieldName))
         where[fieldName] = {};
-    }
     var field = where[fieldName];
 
-    if (!field.hasOwnProperty('$and')) {
+    if (!field.hasOwnProperty('$and'))
         field['$and'] = {};
-    }
     var outerAndOperator = field['$and'];
 
-    if (!outerAndOperator.hasOwnProperty('$or')) {
+    if (!outerAndOperator.hasOwnProperty('$or'))
         outerAndOperator['$or'] = [];
-    }
     var or = outerAndOperator['$or'];
 
     or.push({"$contains": value});
 }
 
 function notContains(where, fieldName, value) {
-    if (!where.hasOwnProperty(fieldName)) {
+    if (!where.hasOwnProperty(fieldName))
         where[fieldName] = {};
-    }
     var field = where[fieldName];
 
-    if (!field.hasOwnProperty('$and')) {
+    if (!field.hasOwnProperty('$and'))
         field['$and'] = {};
-    }
     var outerAndOperator = field['$and'];
 
-    if (!outerAndOperator.hasOwnProperty('$and')) {
+    if (!outerAndOperator.hasOwnProperty('$and'))
         outerAndOperator['$and'] = [];
-    }
     var and = outerAndOperator['$and'];
 
-    //'(NOT "Card"."'+fieldName+'" @>  \'["' + value + '"]\') or ("Card"."'+fieldName+'" @>  \'["' + value + '"]\' is unknown)'
     and.push(sequelize.literal('((NOT "Card"."' + fieldName + '" @>  \'["' + value + '"]\') or ("Card"."' + fieldName + '" @>  \'["' + value + '"]\' is unknown))'));
 }
