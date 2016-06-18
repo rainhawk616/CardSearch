@@ -1,33 +1,35 @@
 mixin paginator(url, backurl, pages, page)
     if pages > 1
-        div
-            nav.navbar
-                ul.pagination
-                    if page !== 1
-                        li.hidden-xs
-                            a.btn.btn-default(href='#{url + "?page=" + (page - 1)}') Previous
-                        li.visible-xs
-                            a.btn.btn-default(href='#{url + "?page=" + (page - 1)}')
-                                .glyphicon.glyphicon-chevron-left
-                    -var left = false
-                    -var right = false
-                    -var i = 1
-                    while i <= pages
-                        if i == 1 || (i > page - 2 && i < page + 2 ) || i == pages
-                            li(class="#{page === i ? 'active' : ''}")
-                                a.btn.btn-default(href='#{url}?page=#{i}') #{i}
-                        else if i >= 2 && i <= page - 2 && !left
-                            -left=true
-                            li
-                                a.btn.btn-default(disabled) ...
-                        else if i >= page + 2 && i <= pages - 2 && !right
-                            -right=true
-                            li
-                                a.btn.btn-default(disabled) ...
-                        -i++
-                    if page < pages
-                        li.hidden-xs
-                            a.btn.btn-default(href='#{url}?page=#{page + 1}') Next
-                        li.visible-xs
-                            a.btn.btn-default(href='#{url}?page=#{page + 1}')
-                                .glyphicon.glyphicon-chevron-right
+        nav
+            ul.pagination
+                if page !== 1
+                    li.hidden-xs
+                        a.btn.btn-default(href='#{url + "?page=" + (page - 1)}')
+                            span Previous
+                    li.visible-xs
+                        a.btn.btn-default(href='#{url + "?page=" + (page - 1)}')
+                            .glyphicon.glyphicon-chevron-left
+                -var left = false
+                -var right = false
+                -var i = 1
+                while i <= pages
+                    if i == 1 || (i > page - 2 && i < page + 2 ) || i == pages
+                        li(class="#{page === i ? 'active' : ''}")
+                            a.btn.btn-default(href='#{url}?page=#{i}') #{i}
+                    else if i >= 2 && i <= page - 2 && !left
+                        -left=true
+                        li
+                            a.btn.btn-default(disabled)
+                                span ...
+                    else if i >= page + 2 && i <= pages - 2 && !right
+                        -right=true
+                        li
+                            a.btn.btn-default(disabled)
+                                span ...
+                    -i++
+                if page < pages
+                    li.hidden-xs
+                        a.btn.btn-default(href='#{url}?page=#{page + 1}') Next
+                    li.visible-xs
+                        a.btn.btn-default(href='#{url}?page=#{page + 1}')
+                            .glyphicon.glyphicon-chevron-right
