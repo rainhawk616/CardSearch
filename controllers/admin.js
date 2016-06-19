@@ -30,6 +30,12 @@ module.exports = {
     },
     sets: function (req, res) {
         models.Set.findAll({
+            include: [
+                {
+                    model: models.Printing,
+                    attributes: ['printingid']
+                }
+            ],
             order: [
                 ['releasedate', 'ASC']
             ]

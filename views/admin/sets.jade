@@ -21,8 +21,8 @@ block content
                         td #{set.name}
                         td #{set.code}
                         td #{set.releaseDate}
-                        td
-                            p / #{set.numberOfCards}
+                        td(class='#{set.Printings.length !== set.numberOfCards ? alert - danger : ""}')
+                            p #{set.Printings.length} / #{set.numberOfCards}
                         td
                             a(href="/admin/set/#{set.setid}")
                                 .glyphicon.glyphicon-edit
