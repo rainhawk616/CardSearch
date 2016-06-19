@@ -5,7 +5,7 @@ var Sequelize = require('sequelize');
 module.exports = function (sequelize, DataTypes) {
     var Format = sequelize.define("Format",
         {
-            colorid: {
+            formatid: {
                 type: Sequelize.INTEGER,
                 primaryKey: true,
                 autoIncrement: true,

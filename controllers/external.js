@@ -143,17 +143,31 @@ module.exports = {
         });
     },
     search: function (req, res) {
-        var supertypes = models.Supertype.findAll();
-        var types = models.Type.findAll();
-        var subtypes = models.Subtype.findAll();
+        var supertypes = models.Supertype.findAll({
+            order: [['description', 'ASC']]
+        });
+        var types = models.Type.findAll({
+            order: [['description', 'ASC']]
+        });
+        var subtypes = models.Subtype.findAll({
+            order: [['description', 'ASC']]
+        });
+        var formats = models.Format.findAll({
+            order: [['description', 'ASC']]
+        });
+        var sets = models.Set.findAll({
+            order: [['name', 'ASC']]
+        });
 
-        Promise.all([supertypes, types, subtypes])
-            .spread(function (supertypes, types, subtypes) {
+        Promise.all([supertypes, types, subtypes, formats, sets])
+            .spread(function (supertypes, types, subtypes, formats, sets) {
                 res.render('search', {
                     title: 'Search',
                     supertypes: supertypes,
                     types: types,
-                    subtypes: subtypes
+                    subtypes: subtypes,
+                    formats: formats,
+                    sets: sets
                 });
             });
     },
@@ -205,7 +219,21 @@ module.exports = {
                  */
                 if (field === 'supertypes'
                     || field === 'types'
-                    || field === 'subtypes') {
+                    || field === 'subtypes'
+                    || field === 'formats'
+                    || field === 'sets') {
+
+                    if (field === 'formats') {
+                        field = 'legalities';
+                        value = {
+                            format: value,
+                            legality: 'Legal'
+                        };
+                    }
+                    else if (field === 'sets') {
+                        field = 'printings';
+                    }
+
                     if (operator === 'and') {
                         andContains(where, field, value);
                     }

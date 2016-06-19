@@ -99,7 +99,7 @@ block content
                     each supertype in supertypes
                         option #{supertype.description}
                 .input-group-btn
-                    a.btn.btn-success.add.addString
+                    a.btn.btn-success.add.addType
                         .glyphicon.glyphicon-plus
         .form-group
             label Type
@@ -113,7 +113,7 @@ block content
                     each type in types
                         option #{type.description}
                 .input-group-btn
-                    a.btn.btn-success.add.addString
+                    a.btn.btn-success.add.addType
                         .glyphicon.glyphicon-plus
         .form-group
             label Subtype
@@ -127,7 +127,35 @@ block content
                     each subtype in subtypes
                         option #{subtype.description}
                 .input-group-btn
-                    a.btn.btn-success.add.addString
+                    a.btn.btn-success.add.addType
+                        .glyphicon.glyphicon-plus
+        .form-group
+            label Format
+            .input-group(data-field='formats' data-field-name='Format')
+                select.selectpicker.operator
+                    option(value='and') And
+                    option(value='or') Or
+                    option(value='not') Not
+                select.form-control.selectpicker.value#format(data-live-search='true' data-none-selected-text='Format')
+                    option(value='')
+                    each format in formats
+                        option #{format.description}
+                .input-group-btn
+                    a.btn.btn-success.add.addType
+                        .glyphicon.glyphicon-plus
+        .form-group
+            label Set
+            .input-group(data-field='sets' data-field-name='Set')
+                select.selectpicker.operator
+                    option(value='and') And
+                    option(value='or') Or
+                    option(value='not') Not
+                select.form-control.selectpicker.value#set(data-live-search='true' data-none-selected-text='Set')
+                    option(value='')
+                    each set in sets
+                        option(value='#{set.code}') #{set.name}
+                .input-group-btn
+                    a.btn.btn-success.add.addType
                         .glyphicon.glyphicon-plus
         .form-group
             label Converted Mana Cost
@@ -198,7 +226,7 @@ block content
                     option(value='Power') Power
                     option(value='Toughness') Toughness
                 .input-group-btn
-                    a.btn.btn-success.add.addString
+                    a.btn.btn-success.add.addType
                         .glyphicon.glyphicon-plus
 
     .col-md-4.col-xs-12
@@ -259,7 +287,6 @@ block content
 
             var string = value.val();
             value.val('');
-            inputGroup.find('.selectpicker.value').selectpicker('val', null);
 
             var values = [];
             var quotedText = /["|']([^"']+)["|']/g;
@@ -286,6 +313,35 @@ block content
                     value: val
                 };
             }
+
+            setQueryJson(query);
+
+            console.log(query);
+        }
+
+        function addType(event) {
+            console.log('event:', event);
+            console.log('this:', this);
+
+            var inputGroup = $(this).closest('.input-group');
+            var value = inputGroup.find('.value').not('div');
+
+            var val = value.val();
+            value.val('');
+            inputGroup.find('.selectpicker.value').selectpicker('val', null);
+
+            if (val === undefined || val === null || val === '')
+                return;
+
+            var query = getQueryJson();
+            if (query === null || query === undefined || query === '')
+                query = {};
+
+            query[createGuid()] = {
+                field: inputGroup.data('field'),
+                operator: inputGroup.find('.operator.selectpicker').val(),
+                value: val
+            };
 
             setQueryJson(query);
 
@@ -404,6 +460,7 @@ block content
             $('.addString').click(addString);
             $('.addInt').click(addInt);
             $('.addColorIdentity').click(addColorIdentity);
+            $('.addType').click(addType);
 
 
             $('.value').keyup(function (event) {
@@ -416,6 +473,7 @@ block content
                 $('.addString').click();
                 $('.addInt').click();
                 $('.addColorIdentity').click();
+                $('.addType').click();
             });
 
         });

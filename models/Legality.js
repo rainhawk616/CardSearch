@@ -5,7 +5,7 @@ var Sequelize = require('sequelize');
 module.exports = function (sequelize, DataTypes) {
     var Legality = sequelize.define("Legality",
         {
-            colorid: {
+            legalityid: {
                 type: Sequelize.INTEGER,
                 primaryKey: true,
                 autoIncrement: true,

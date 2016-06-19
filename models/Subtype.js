@@ -5,7 +5,7 @@ var Sequelize = require('sequelize');
 module.exports = function (sequelize, DataTypes) {
     var Subtype = sequelize.define("Subtype",
         {
-            colorid: {
+            subtypeid: {
                 type: Sequelize.INTEGER,
                 primaryKey: true,
                 autoIncrement: true,

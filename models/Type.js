@@ -5,7 +5,7 @@ var Sequelize = require('sequelize');
 module.exports = function (sequelize, DataTypes) {
     var Type = sequelize.define("Type",
         {
-            colorid: {
+            typeid: {
                 type: Sequelize.INTEGER,
                 primaryKey: true,
                 autoIncrement: true,

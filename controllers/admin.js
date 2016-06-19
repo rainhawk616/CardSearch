@@ -651,6 +651,8 @@ function findOrCreateCard(transaction, set, cardJson, layoutMap, colorIdentityMa
              The card already exists but we should update the printings just in case the card got a new one
              */
             card.printings = cardJson.printings;
+            card.text = cardJson.text;
+            card.legalities = cardJson.legalities;
             promises.push(card.save({transaction: transaction}));
         }
 
